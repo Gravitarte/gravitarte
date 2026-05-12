@@ -152,6 +152,12 @@
     .modal-actions .btn { padding:12px; font-size:14px; }
     .error-msg { font-size:12px; color:#a32d2d; margin-top:-10px; margin-bottom:10px; display:none; }
     .error-msg.show { display:block; }
+    .dur-row { display:flex; gap:8px; margin-bottom:1rem; }
+    .dur-btn { flex:1; padding:10px; font-size:13px; font-weight:500; font-family:inherit; border-radius:var(--rsm); cursor:pointer; border:1px solid var(--border2); background:var(--surface); color:var(--text2); transition:all .15s; }
+    .dur-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+    /* multi-slot: aula de 1h30 ocupa slot principal + meia linha abaixo */
+    .slot.half-top    { border-radius:var(--rsm) var(--rsm) 0 0; border-bottom:none; margin-bottom:0; }
+    .slot.half-bottom { border-radius:0 0 var(--rsm) var(--rsm); border-top:1px dashed rgba(0,0,0,.1); min-height:20px; padding:4px 12px; font-size:10px; opacity:.75; cursor:pointer; margin-bottom:4px; }
 
     /* LOADING */
     #loading { position:fixed; inset:0; background:var(--accent); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; gap:1rem; }
@@ -212,6 +218,12 @@
     <p class="modal-sub" id="book-sub"></p>
     <label class="field-label">Seu nome (professor)</label>
     <input class="field-input" type="text" id="prof-name" placeholder="Ex: Ana Silva" maxlength="40"/>
+    <label class="field-label">Duração da aula</label>
+    <div class="dur-row" id="dur-row">
+      <button class="dur-btn active" data-slots="1" onclick="selectDur(this)">1 hora</button>
+      <button class="dur-btn" data-slots="2" onclick="selectDur(this)">1h30</button>
+    </div>
+    <p class="error-msg" id="dur-error">Horário seguinte já está ocupado para 1h30.</p>
     <div class="modal-actions">
       <button class="btn" onclick="closeBookModal()">Cancelar</button>
       <button class="btn btn-primary" onclick="confirmBooking()">Reservar</button>
@@ -292,12 +304,16 @@ const AULAS_FIXAS = [
 // ═══════════════════════════════════════════════════════════
 // CONSTANTES
 // ═══════════════════════════════════════════════════════════
-// Slots de 30 em 30 minutos, das 06:00 às 21:30
+// Slots de 1h em 1h, das 06:00 às 21:00
 const SLOTS = [];
 for (let h = 6; h <= 21; h++) {
   SLOTS.push(`${String(h).padStart(2,'0')}:00`);
-  if (h < 22) SLOTS.push(`${String(h).padStart(2,'0')}:30`);
 }
+// Duração possível de cada reserva
+const DURATIONS = [
+  { label: '1 hora',     slots: 1 },
+  { label: '1h30',       slots: 2 }, // ocupa este slot + o seguinte
+];
 
 const COLOR_OPTIONS = [
   { hex:'#7F77DD', light:'#EEEDFE', text:'#3C3489', label:'Roxo'        },
@@ -475,36 +491,62 @@ function renderSingle() {
   if (!room) return;
   const ds = dateStr(dateOffset);
 
-  SLOTS.forEach(slot => {
-    const booked = getSlot(currentRoom, ds, slot);
+  SLOTS.forEach((slot, idx) => {
+    const rawVal = bookings[fbKey(currentRoom, ds, slot)];
+    const booked  = getSlot(currentRoom, ds, slot);
     const isFixed = booked && booked.endsWith('📌');
-    const row  = document.createElement('div'); row.className = 'srow';
-    const lbl  = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = slot;
+    const is1h30Start = rawVal && rawVal.includes('|1h30|');
+    const isCont      = rawVal && rawVal.includes('|cont|');
+
+    // continuation slots are rendered as part of the block above
+    if (isCont) return;
+
+    const row    = document.createElement('div'); row.className = 'srow';
+    const lbl    = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = slot;
     const slotEl = document.createElement('div');
 
     if (booked) {
-      slotEl.className = 'slot booked';
-      slotEl.style.background   = room.color.light;
-      slotEl.style.borderColor  = room.color.hex + '88';
-      slotEl.style.color        = room.color.text;
-      const displayName = isFixed ? booked.replace(' 📌','') : booked;
+      const displayName = isFixed
+        ? booked.replace(' 📌','')
+        : (is1h30Start ? rawVal.replace(' |1h30|','') : booked);
+
+      slotEl.className = 'slot booked' + (is1h30Start ? ' half-top' : '');
+      slotEl.style.background  = room.color.light;
+      slotEl.style.borderColor = room.color.hex + '88';
+      slotEl.style.color       = room.color.text;
       slotEl.innerHTML = `
         <span class="bname">${displayName}</span>
-        ${isFixed ? '<span class="fixed-tag">Aula fixa</span>' : ''}
+        ${isFixed   ? '<span class="fixed-tag">Aula fixa</span>' : ''}
+        ${is1h30Start ? '<span class="fixed-tag">1h30</span>' : ''}
         <span class="btag" style="background:${room.color.hex}22;color:${room.color.text}">reservado</span>
       `;
-      if (!isFixed) {
-        slotEl.onclick = () => openCancelModal(currentRoom, ds, slot, booked);
-      } else {
-        slotEl.style.cursor = 'default';
+      if (!isFixed) slotEl.onclick = () => openCancelModal(currentRoom, ds, slot, displayName);
+      else slotEl.style.cursor = 'default';
+
+      row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
+
+      // If 1h30, render a small continuation bar
+      if (is1h30Start) {
+        const nextSlot = SLOTS[idx + 1];
+        if (nextSlot) {
+          const row2 = document.createElement('div'); row2.className = 'srow';
+          const lbl2 = document.createElement('div'); lbl2.className = 'tlbl'; lbl2.textContent = nextSlot;
+          const cont = document.createElement('div');
+          cont.className = 'slot half-bottom booked';
+          cont.style.background  = room.color.light;
+          cont.style.borderColor = room.color.hex + '88';
+          cont.style.color       = room.color.text;
+          cont.textContent = '└ até ' + String(parseInt(nextSlot)+1).padStart(2,'0') + ':00';
+          cont.onclick = () => openCancelModal(currentRoom, ds, slot, displayName);
+          row2.appendChild(lbl2); row2.appendChild(cont); ct.appendChild(row2);
+        }
       }
     } else {
       slotEl.className = 'slot';
       slotEl.innerHTML = `<span class="free-lbl">Disponível</span><span class="plus-i">+</span>`;
       slotEl.onclick = () => openBookModal(currentRoom, ds, slot);
+      row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
     }
-
-    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
   });
 }
 
@@ -620,12 +662,27 @@ function calNav(dir) {
 // ═══════════════════════════════════════════════════════════
 // MODAIS
 // ═══════════════════════════════════════════════════════════
+function selectDur(btn) {
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dur-error').classList.remove('show');
+}
+
+function getNextSlot(slot) {
+  const idx = SLOTS.indexOf(slot);
+  return idx >= 0 && idx < SLOTS.length - 1 ? SLOTS[idx + 1] : null;
+}
+
 function openBookModal(roomId, ds, slot) {
   pendingSlot = { roomId, ds, slot };
   const room = getRoom(roomId);
   document.getElementById('book-title').textContent = 'Reservar — ' + room.name;
   document.getElementById('book-sub').textContent   = formatDateStr(ds) + ' · ' + slot;
   document.getElementById('prof-name').value = '';
+  document.getElementById('dur-error').classList.remove('show');
+  // reset duration to 1h
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.dur-btn[data-slots="1"]').classList.add('active');
   document.getElementById('modal-book').classList.add('open');
   setTimeout(() => document.getElementById('prof-name').focus(), 150);
 }
@@ -633,7 +690,19 @@ function closeBookModal() { document.getElementById('modal-book').classList.remo
 function confirmBooking() {
   const name = document.getElementById('prof-name').value.trim();
   if (!name) { document.getElementById('prof-name').focus(); return; }
-  writeSlot(pendingSlot.roomId, pendingSlot.ds, pendingSlot.slot, name);
+  const activeDur = document.querySelector('.dur-btn.active');
+  const durSlots  = activeDur ? parseInt(activeDur.dataset.slots) : 1;
+
+  if (durSlots === 2) {
+    const next = getNextSlot(pendingSlot.slot);
+    if (!next) { document.getElementById('dur-error').textContent = 'Não há horário seguinte disponível para 1h30.'; document.getElementById('dur-error').classList.add('show'); return; }
+    if (getSlot(pendingSlot.roomId, pendingSlot.ds, next)) { document.getElementById('dur-error').textContent = 'O horário seguinte já está ocupado para 1h30.'; document.getElementById('dur-error').classList.add('show'); return; }
+    writeSlot(pendingSlot.roomId, pendingSlot.ds, pendingSlot.slot, name + ' |1h30|');
+    writeSlot(pendingSlot.roomId, pendingSlot.ds, next, name + ' |cont|');
+  } else {
+    writeSlot(pendingSlot.roomId, pendingSlot.ds, pendingSlot.slot, name);
+  }
+
   const room = getRoom(pendingSlot.roomId);
   closeBookModal();
   showToast('✓ ' + room.name + ' reservada para ' + name + '!');
@@ -657,6 +726,12 @@ function confirmCancel() {
     document.getElementById('admin-pwd').value = '';
     document.getElementById('admin-pwd').focus();
     return;
+  }
+  // If it was a 1h30 booking, also delete the continuation slot
+  const rawVal = bookings[fbKey(cancelSlot.roomId, cancelSlot.ds, cancelSlot.slot)];
+  if (rawVal && rawVal.includes('|1h30|')) {
+    const next = getNextSlot(cancelSlot.slot);
+    if (next) deleteSlot(cancelSlot.roomId, cancelSlot.ds, next);
   }
   deleteSlot(cancelSlot.roomId, cancelSlot.ds, cancelSlot.slot);
   closeCancelModal();
