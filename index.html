@@ -14,13 +14,13 @@
 
     // ─── COLE AQUI SUAS CONFIGURAÇÕES DO FIREBASE ───────────
     const firebaseConfig = {
-      apiKey:            "COLE_AQUI",
-      authDomain:        "COLE_AQUI",
-      databaseURL:       "COLE_AQUI",
-      projectId:         "COLE_AQUI",
-      storageBucket:     "COLE_AQUI",
-      messagingSenderId: "COLE_AQUI",
-      appId:             "COLE_AQUI"
+     apiKey:            "AIzaSyDMxeSOUIzSbl8r1niy83_Da66_x0Wt8rQ",
+      authDomain:        "gravitarte-57011.firebaseapp.com",
+      databaseURL:       "https://gravitarte-57011-default-rtdb.firebaseio.com",
+      projectId:         "gravitarte-57011",
+      storageBucket:     "gravitarte-57011.firebasestorage.app",
+      messagingSenderId: "657622099981",
+      appId:             "1:657622099981:web:5724a4d5b56288f5a44d44"
     };
     // ────────────────────────────────────────────────────────
 
@@ -287,7 +287,7 @@ const ADMIN_PASSWORD = "gravitarte2024";
 //   Exemplos: "08:00", "09:30", "21:00"
 //
 // sala: deve ser exatamente o ID da sala
-//   (venus, lunar, solar — ou o id que você criou)
+//   (venus, lunar, galaxia — ou o id que você criou)
 //
 // EXEMPLO:
 // Toda segunda e quarta, sala Galáxia, prof Mari Souza, 21h–22h:
@@ -295,9 +295,8 @@ const ADMIN_PASSWORD = "gravitarte2024";
 // ───────────────────────────────────────────────────────────
 const AULAS_FIXAS = [
   // ↓↓ Adicione ou edite as aulas fixas aqui ↓↓
-  { dias:[1,3], sala:"venus", professor:"Mari Souza",  inicio:"21:00", fim:"22:00" },
-  { dias:[2,5], sala:"lunar", professor:"João Pedro",  inicio:"08:00", fim:"09:00" },
-  { dias:[1,2,3,4,5], sala:"solar", professor:"Cia de Dança", inicio:"10:00", fim:"11:30" },
+  { dias:[1,3], sala:"galaxia", professor:"Mari Souza",  inicio:"21:00", fim:"22:00" },
+  { dias:[1], sala:"lunar", professor:"Diego",  inicio:"21:00", fim:"22:00" },
   // ↑↑ Adicione ou edite as aulas fixas aqui ↑↑
 ];
 
@@ -332,7 +331,7 @@ const COLOR_OPTIONS = [
 let rooms = JSON.parse(localStorage.getItem('grav_rooms') || 'null') || [
   { id:'venus', name:'Vênus', icon:'♀', color: COLOR_OPTIONS[0] },
   { id:'lunar', name:'Lunar', icon:'☾', color: COLOR_OPTIONS[1] },
-  { id:'solar', name:'Solar', icon:'☀', color: COLOR_OPTIONS[2] },
+  { id:'galaxia', name:'Galáxia', icon:'☀', color: COLOR_OPTIONS[2] },
 ];
 let bookings       = {};
 let currentRoom    = rooms[0]?.id || '';
