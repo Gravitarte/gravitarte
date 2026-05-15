@@ -14,13 +14,13 @@
 
     // ─── COLE AQUI SUAS CONFIGURAÇÕES DO FIREBASE ───────────
     const firebaseConfig = {
-      apiKey:            "AIzaSyDMxeSOUIzSbl8r1niy83_Da66_x0Wt8rQ",
-      authDomain:        "gravitarte-57011.firebaseapp.com",
-      databaseURL:       "https://gravitarte-57011-default-rtdb.firebaseio.com",
-      projectId:         "gravitarte-57011",
-      storageBucket:     "gravitarte-57011.firebasestorage.app",
-      messagingSenderId: "657622099981",
-      appId:             "1:657622099981:web:5724a4d5b56288f5a44d44
+      apiKey:            "COLE_AQUI",
+      authDomain:        "COLE_AQUI",
+      databaseURL:       "COLE_AQUI",
+      projectId:         "COLE_AQUI",
+      storageBucket:     "COLE_AQUI",
+      messagingSenderId: "COLE_AQUI",
+      appId:             "COLE_AQUI"
     };
     // ────────────────────────────────────────────────────────
 
@@ -295,22 +295,9 @@ const ADMIN_PASSWORD = "gravitarte2024";
 // ───────────────────────────────────────────────────────────
 const AULAS_FIXAS = [
   // ↓↓ Adicione ou edite as aulas fixas aqui ↓↓
-  { dias:[1,3], sala:"lunar", professor:"Diego Alcântara",  inicio:"21:00", fim:"22:00" },
-  { dias:[1,3], sala:"lunar", professor:"Mari Mosson",  inicio:"19:00", fim:"20:00" },
-
-  { dias:[1,3], sala:"venus", professor:"Jé Zeni",  inicio:"18:00", fim:"19:00" },
-  { dias:[1,3], sala:"venus", professor:"Karine",  inicio:"19:00", fim:"20:00" },
-  { dias:[1,3], sala:"venus", professor:"Iago",  inicio:"20:00", fim:"21:00" },
-  { dias:[1,3], sala:"venus", professor:"Isys",  inicio:"21:00", fim:"22:30" },
-
-  { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"08:00", fim:"09:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"09:00", fim:"10:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"12:30", fim:"13:30" },
-  { dias:[1,3], sala:"solar", professor:"Babi Stemp",  inicio:"17:00", fim:"18:00" },
-  { dias:[1,3], sala:"solar", professor:"Babi Stemp",  inicio:"18:00", fim:"19:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"19:00", fim:"20:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"20:00", fim:"21:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"21:00", fim:"22:00" },
+  { dias:[1,3], sala:"venus", professor:"Mari Souza",  inicio:"21:00", fim:"22:00" },
+  { dias:[2,5], sala:"lunar", professor:"João Pedro",  inicio:"08:00", fim:"09:00" },
+  { dias:[1,2,3,4,5], sala:"galaxia", professor:"Cia de Dança", inicio:"10:00", fim:"11:30" },
   // ↑↑ Adicione ou edite as aulas fixas aqui ↑↑
 ];
 
@@ -319,16 +306,14 @@ const AULAS_FIXAS = [
 // ═══════════════════════════════════════════════════════════
 // Slots de 1h em 1h, das 06:00 às 21:00
 // ───────────────────────────────────────────────────────────
-// SLOTS POR DIA DA SEMANA (de 30 em 30 minutos)
-// Seg/Qua/Sex/Sáb/Dom → início 07:00
-// Ter/Qui             → início 07:30
-// Todos terminam em   → 21:00
+// SLOTS — grade de 1h em 1h por dia da semana
+// Seg/Qua/Sex/Sáb/Dom → 07:00 até 21:00
+// Ter/Qui             → 07:00 até 21:00 (mesmo início)
 // ───────────────────────────────────────────────────────────
 function getSlotsForDow(dow) {
-  const startMin = (dow === 2 || dow === 4) ? 7*60+30 : 7*60;
   const slots = [];
-  for (let m = startMin; m <= 21*60; m += 30) {
-    slots.push(String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'));
+  for (let h = 7; h <= 21; h++) {
+    slots.push(String(h).padStart(2,'0') + ':00');
   }
   return slots;
 }
@@ -338,11 +323,12 @@ function getSlotsForOffset(off) {
 function getSlotsForDateStr(ds) {
   return getSlotsForDow(new Date(ds + 'T12:00:00').getDay());
 }
-// Duração: 1h = 2 slots de 30min, 1h30 = 3 slots de 30min
-const DURATIONS = [
-  { label:'1 hora', slots:2 },
-  { label:'1h30',   slots:3 },
-];
+
+// Chave do slot de meia hora (ex: "08:30") para uma reserva de 1h30 iniciada em "08:00"
+function halfSlotKey(roomId, ds, slot) {
+  const [h] = slot.split(':').map(Number);
+  return fbKey(roomId, ds, String(h).padStart(2,'0') + ':30');
+}
 
 const COLOR_OPTIONS = [
   { hex:'#7F77DD', light:'#EEEDFE', text:'#3C3489', label:'Roxo'        },
@@ -521,66 +507,78 @@ function renderSingle() {
   const ds    = dateStr(dateOffset);
   const slots = getSlotsForOffset(dateOffset);
 
-  slots.forEach((slot, idx) => {
-    const rawVal   = bookings[fbKey(currentRoom, ds, slot)];
-    const booked   = getSlot(currentRoom, ds, slot);
-    const isFixed  = booked && booked.endsWith('📌');
-    const is1h30   = rawVal && rawVal.includes('|1h30|');
-    const isCont   = rawVal && rawVal.includes('|cont|');
+  slots.forEach(slot => {
+    const rawVal  = bookings[fbKey(currentRoom, ds, slot)];
+    const booked  = getSlot(currentRoom, ds, slot);
+    const isFixed = booked && booked.endsWith('📌');
+    const is1h30  = rawVal && rawVal.includes('|1h30|');
 
-    if (isCont) return;
-
+    // ── Slot principal (hora cheia) ──
     const row    = document.createElement('div'); row.className = 'srow';
     const lbl    = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = slot;
     const slotEl = document.createElement('div');
 
     if (booked) {
       const displayName = isFixed ? booked.replace(' 📌','') : (is1h30 ? rawVal.replace(' |1h30|','') : booked);
-
-      // Aulas fixas: cor da sala. Avulsas: tom neutro grafite
       const bg     = isFixed ? room.color.light  : '#f0eeea';
       const border = isFixed ? room.color.hex+'88' : '#b0aea8';
       const color  = isFixed ? room.color.text   : '#2c2b28';
 
-      slotEl.className = 'slot booked' + (is1h30 ? ' half-top' : '');
-      slotEl.style.background  = bg;
-      slotEl.style.borderColor = border;
-      slotEl.style.color       = color;
+      slotEl.className = 'slot booked';
+      slotEl.style.cssText = `background:${bg};border-color:${border};color:${color};`;
       slotEl.innerHTML = `
         <span class="bname">${displayName}</span>
-        ${isFixed  ? '<span class="fixed-tag" style="background:'+room.color.hex+'22;color:'+room.color.text+'">Aula fixa</span>' : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
-        ${is1h30   ? '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">1h30</span>' : ''}
-        <span class="btag" style="background:${isFixed ? room.color.hex+'22' : '#e0ddd8'};color:${isFixed ? room.color.text : '#5a5956'}">reservado</span>
+        ${isFixed ? `<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>` : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
+        <span class="btag" style="background:${isFixed?room.color.hex+'22':'#e0ddd8'};color:${isFixed?room.color.text:'#5a5956'}">${is1h30 ? '1h30' : '1h'}</span>
       `;
       if (!isFixed) slotEl.onclick = () => openCancelModal(currentRoom, ds, slot, displayName);
       else slotEl.style.cursor = 'default';
-
-      row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
-
-      if (is1h30) {
-        const nextSlot = slots[idx + 1];
-        if (nextSlot) {
-          const row2 = document.createElement('div'); row2.className = 'srow';
-          const lbl2 = document.createElement('div'); lbl2.className = 'tlbl'; lbl2.textContent = nextSlot;
-          const cont = document.createElement('div');
-          cont.className = 'slot half-bottom booked';
-          cont.style.background  = bg;
-          cont.style.borderColor = border;
-          cont.style.color       = color;
-          // Calculate end time: nextSlot + 30min
-          const [nh, nm] = nextSlot.split(':').map(Number);
-          const endMin   = nh*60 + nm + 30;
-          const endStr   = String(Math.floor(endMin/60)).padStart(2,'0') + ':' + String(endMin%60).padStart(2,'0');
-          cont.textContent = '└ até ' + endStr;
-          cont.onclick = () => { if (!isFixed) openCancelModal(currentRoom, ds, slot, displayName); };
-          row2.appendChild(lbl2); row2.appendChild(cont); ct.appendChild(row2);
-        }
-      }
     } else {
       slotEl.className = 'slot';
       slotEl.innerHTML = `<span class="free-lbl">Disponível</span><span class="plus-i">+</span>`;
       slotEl.onclick = () => openBookModal(currentRoom, ds, slot);
-      row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
+    }
+    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
+
+    // ── Sub-slot :30 — aparece se a aula foi de 1h30 ──
+    // Verifica se o slot :30 desta hora está marcado como reservado ou disponível
+    const [h] = slot.split(':').map(Number);
+    const halfSlot = String(h).padStart(2,'0') + ':30';
+    const halfRaw  = bookings[fbKey(currentRoom, ds, halfSlot)];
+    const halfBooked = getSlot(currentRoom, ds, halfSlot);
+    const halfFixed  = halfBooked && halfBooked.endsWith('📌');
+
+    // Só mostra a linha :30 se:
+    // a) a hora cheia é 1h30 (os 30min restantes ficam disponíveis), OU
+    // b) tem uma aula fixa que começa no :30
+    if (is1h30 || halfBooked) {
+      const row2   = document.createElement('div'); row2.className = 'srow';
+      const lbl2   = document.createElement('div'); lbl2.className = 'tlbl'; lbl2.textContent = halfSlot;
+      const slot2  = document.createElement('div');
+
+      if (halfBooked) {
+        const dn2    = halfFixed ? halfBooked.replace(' 📌','') : (halfRaw && halfRaw.includes('|1h30|') ? halfRaw.replace(' |1h30|','') : halfBooked);
+        const bg2    = halfFixed ? room.color.light  : '#f0eeea';
+        const brd2   = halfFixed ? room.color.hex+'88' : '#b0aea8';
+        const col2   = halfFixed ? room.color.text   : '#2c2b28';
+        const is1h30b = halfRaw && halfRaw.includes('|1h30|');
+        slot2.className = 'slot booked';
+        slot2.style.cssText = `background:${bg2};border-color:${brd2};color:${col2};`;
+        slot2.innerHTML = `
+          <span class="bname">${dn2}</span>
+          ${halfFixed ? `<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>` : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
+          <span class="btag" style="background:${halfFixed?room.color.hex+'22':'#e0ddd8'};color:${halfFixed?room.color.text:'#5a5956'}">${is1h30b?'1h30':'1h'}</span>
+        `;
+        if (!halfFixed) slot2.onclick = () => openCancelModal(currentRoom, ds, halfSlot, dn2);
+        else slot2.style.cursor = 'default';
+      } else {
+        // 30 min livres após aula de 1h30
+        slot2.className = 'slot';
+        slot2.style.cssText = 'border-style:dashed;opacity:0.75;';
+        slot2.innerHTML = `<span class="free-lbl">30 min disponíveis</span><span class="plus-i">+</span>`;
+        slot2.onclick = () => openBookModal(currentRoom, ds, halfSlot);
+      }
+      row2.appendChild(lbl2); row2.appendChild(slot2); ct.appendChild(row2);
     }
   });
 }
