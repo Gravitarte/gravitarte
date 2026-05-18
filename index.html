@@ -295,13 +295,13 @@ const ADMIN_PASSWORD = "gravitarte2024";
 // ───────────────────────────────────────────────────────────
 const AULAS_FIXAS = [
   // ↓↓ Adicione ou edite as aulas fixas aqui ↓↓
- { dias:[1,3], sala:"lunar", professor:"Diego Alcântara",  inicio:"21:00", fim:"22:00" },
+{ dias:[1,3], sala:"lunar", professor:"Diego Alcântara",  inicio:"21:00", fim:"22:00" },
   { dias:[1,3], sala:"lunar", professor:"Mari Mosson",  inicio:"19:00", fim:"20:00" },
 
   { dias:[1,3], sala:"venus", professor:"Jé Zeni",  inicio:"18:00", fim:"19:00" },
   { dias:[1,3], sala:"venus", professor:"Karine",  inicio:"19:00", fim:"20:00" },
   { dias:[1,3], sala:"venus", professor:"Iago",  inicio:"20:00", fim:"21:00" },
-  { dias:[1,3], sala:"venus", professor:"Isys",  inicio:"21:00", fim:"22:30" },
+  { dias:[1,3], sala:"venus", professor:"Isys Caldas",  inicio:"21:00", fim:"22:30" },
 
   { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"08:00", fim:"09:00" },
   { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"09:00", fim:"10:00" },
@@ -311,6 +311,35 @@ const AULAS_FIXAS = [
   { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"19:00", fim:"20:00" },
   { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"20:00", fim:"21:00" },
   { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"21:00", fim:"22:00" },
+
+  { dias:[2,4], sala:"solar", professor:"Mari Souza",  inicio:"07:30", fim:"08:30" },
+  { dias:[2,4], sala:"solar", professor:"Mari Souza",  inicio:"08:30", fim:"09:30" },
+  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"16:30", fim:"17:30" },
+  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"17:30", fim:"18:30" },
+  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"19:30", fim:"20:30" },
+  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"20:30", fim:"21:30" },
+  { dias:[2], sala:"solar", professor:"Mari Souza",  inicio:"18:30", fim:"19:30" },
+  { dias:[4], sala:"solar", professor:"Mari Mosson",  inicio:"18:30", fim:"19:30" },
+
+  { dias:[2], sala:"lunar", professor:"Mari Souza",  inicio:"20:30", fim:"21:30" },
+
+  { dias:[4], sala:"venus", professor:"Isys Caldas",  inicio:"7:30", fim:"8:30" },
+  { dias:[2,4], sala:"venus", professor:"Jé Zeni",  inicio:"18:30", fim:"19:30" },
+  { dias:[2,4], sala:"venus", professor:"Jé Zeni",  inicio:"19:30", fim:"20:30" },
+  { dias:[2,4], sala:"venus", professor:"Babi Stemp",  inicio:"20:30", fim:"21:30" },
+
+  { dias:[5], sala:"venus", professor:"Chrystyam",  inicio:"20:00", fim:"21:00" },
+  { dias:[5], sala:"solar", professor:"Mari Souza",  inicio:"18:00", fim:"19:00" },
+  { dias:[5], sala:"solar", professor:"Mari Souza",  inicio:"19:00", fim:"20:00" },
+  { dias:[5], sala:"solar", professor:"Jé Zeni",  inicio:"20:30", fim:"21:30" },
+
+  { dias:[6], sala:"solar", professor:"Babi Stemp",  inicio:"9:30", fim:"10:30" },
+  { dias:[6], sala:"solar", professor:"Babi Stemp",  inicio:"10:30", fim:"11:30" },
+  { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"12:30", fim:"13:30" },
+  { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"13:30", fim:"14:30" },
+  { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"14:30", fim:"15:30" },
+
+
   // ↑↑ Adicione ou edite as aulas fixas aqui ↑↑
 ];
 
@@ -318,29 +347,94 @@ const AULAS_FIXAS = [
 // CONSTANTES
 // ═══════════════════════════════════════════════════════════
 // Slots de 1h em 1h, das 06:00 às 21:00
-// ───────────────────────────────────────────────────────────
-// SLOTS — grade de 1h em 1h por dia da semana
-// Seg/Qua/Sex/Sáb/Dom → 07:00 até 21:00
-// Ter/Qui             → 07:00 até 21:00 (mesmo início)
-// ───────────────────────────────────────────────────────────
-function getSlotsForDow(dow) {
-  const slots = [];
-  for (let h = 7; h <= 21; h++) {
-    slots.push(String(h).padStart(2,'0') + ':00');
-  }
-  return slots;
+// ═══════════════════════════════════════════════════════════
+// SISTEMA DE TIMELINE DINÂMICA
+// ─────────────────────────────────────────────────────────
+// A grade não é mais uma lista fixa de horas cheias.
+// Ela é construída a partir dos blocos reais de ocupação,
+// inserindo slots livres nos intervalos corretos.
+//
+// Regras:
+//  - Aula de 1h  → ocupa um bloco de 60min
+//  - Aula de 1h30 → ocupa um bloco de 90min
+//  - Os slots disponíveis têm duração do espaço livre até o
+//    próximo bloco ocupado (pode ser 30min, 1h, 1h30, etc.)
+// ═══════════════════════════════════════════════════════════
+
+const DAY_START = 7 * 60;   // 07:00 em minutos
+const DAY_END   = 21 * 60;  // 21:00 em minutos
+
+function minToSlot(m) {
+  return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
 }
-function getSlotsForOffset(off) {
-  const d = new Date(); d.setDate(d.getDate() + off); return getSlotsForDow(d.getDay());
-}
-function getSlotsForDateStr(ds) {
-  return getSlotsForDow(new Date(ds + 'T12:00:00').getDay());
+function slotToMin(s) {
+  const [h,m] = s.split(':').map(Number); return h*60+m;
 }
 
-// Chave do slot de meia hora (ex: "08:30") para uma reserva de 1h30 iniciada em "08:00"
-function halfSlotKey(roomId, ds, slot) {
-  const [h] = slot.split(':').map(Number);
-  return fbKey(roomId, ds, String(h).padStart(2,'0') + ':30');
+// Retorna todos os blocos ocupados de uma sala num dia (fixos + manuais),
+// ordenados por início, sem sobreposição
+function getOccupiedBlocks(roomId, ds) {
+  const blocks = [];
+
+  // Aulas fixas
+  const dow = new Date(ds + 'T12:00:00').getDay();
+  for (const a of AULAS_FIXAS) {
+    if (a.sala !== roomId) continue;
+    if (!a.dias.includes(dow)) continue;
+    const start = slotToMin(a.inicio);
+    const end   = slotToMin(a.fim);
+    blocks.push({ start, end, name: a.professor, fixed: true });
+  }
+
+  // Reservas manuais (no Firebase)
+  for (const [key, val] of Object.entries(bookings)) {
+    if (!key.startsWith(roomId + '__' + ds + '__')) continue;
+    const slotPart = key.split('__')[2].replace('-',':');
+    const start    = slotToMin(slotPart);
+    const dur      = val.includes('|1h30|') ? 90 : 60;
+    const end      = start + dur;
+    const name     = val.replace(' |1h30|','').trim();
+    blocks.push({ start, end, name, fixed: false, raw: val, slotKey: slotPart });
+  }
+
+  // Ordena por início e remove sobreposições
+  blocks.sort((a,b) => a.start - b.start);
+  return blocks;
+}
+
+// Constrói a lista de itens da timeline para uma sala + dia
+// Cada item: { type:'booked'|'free', start, end, ...dadosDoBloco }
+function buildTimeline(roomId, ds) {
+  const blocks  = getOccupiedBlocks(roomId, ds);
+  const items   = [];
+  let cursor    = DAY_START;
+
+  for (const b of blocks) {
+    if (b.start < DAY_START || b.start >= DAY_END) continue;
+    if (b.start > cursor) {
+      // Espaço livre antes deste bloco
+      items.push({ type:'free', start:cursor, end:b.start });
+    }
+    if (b.start >= cursor) {
+      items.push({ type:'booked', ...b });
+      cursor = b.end;
+    }
+  }
+
+  if (cursor < DAY_END) {
+    items.push({ type:'free', start:cursor, end:DAY_END });
+  }
+
+  return items;
+}
+
+// Formata duração em minutos para exibição
+function durLabel(min) {
+  if (min === 60)  return '1h';
+  if (min === 90)  return '1h30';
+  if (min === 30)  return '30min';
+  if (min < 60)    return min + 'min';
+  return Math.floor(min/60) + 'h' + (min%60 ? (min%60)+'min' : '');
 }
 
 const COLOR_OPTIONS = [
@@ -433,51 +527,24 @@ function fbKey(roomId, ds, slot) {
   return roomId + '__' + ds + '__' + slot.replace(':','-');
 }
 
-// ───────────────────────────────────────────────────────────
-// Verifica se um slot é o INÍCIO de uma aula fixa
-// Só retorna no horário exato de início (não nos intermediários)
-// ───────────────────────────────────────────────────────────
-function fixedBooking(roomId, ds, slot) {
-  const date = new Date(ds + 'T12:00:00');
-  const dow  = date.getDay();
-  for (const a of AULAS_FIXAS) {
-    if (a.sala !== roomId) continue;
-    if (!a.dias.includes(dow)) continue;
-    if (slot === a.inicio) {
-      // Calcular duração em minutos
-      const [sh, sm] = a.inicio.split(':').map(Number);
-      const [eh, em] = a.fim.split(':').map(Number);
-      const dur = (eh*60+em) - (sh*60+sm);
-      if (dur === 90) return a.professor + ' |1h30| 📌';
-      return a.professor + ' 📌';
-    }
-  }
-  return null;
+// Verifica se um horário (em minutos) está ocupado numa sala+dia
+function isOccupied(roomId, ds, startMin, endMin) {
+  const blocks = getOccupiedBlocks(roomId, ds);
+  return blocks.some(b => startMin < b.end && endMin > b.start);
 }
 
-// Verifica se um slot :30 é o início de uma aula fixa de 1h30
-// (para mostrar o sub-slot nos casos de aulas fixas de 1h30)
-function fixedHalfBooking(roomId, ds, halfSlot) {
-  const date = new Date(ds + 'T12:00:00');
-  const dow  = date.getDay();
-  for (const a of AULAS_FIXAS) {
-    if (a.sala !== roomId) continue;
-    if (!a.dias.includes(dow)) continue;
-    if (halfSlot === a.inicio) {
-      return a.professor + ' 📌';
-    }
-  }
-  return null;
+// Retorna o bloco que ocupa exatamente startMin (para cancelar)
+function getBlockAt(roomId, ds, startMin) {
+  const blocks = getOccupiedBlocks(roomId, ds);
+  return blocks.find(b => b.start === startMin) || null;
 }
 
-// Retorna o nome reservado (fixo ou manual) — apenas no slot de início
+// Chave do Firebase para um slot (mantém compatibilidade)
 function getSlot(roomId, ds, slot) {
-  return bookings[fbKey(roomId, ds, slot)] || fixedBooking(roomId, ds, slot) || null;
+  return bookings[fbKey(roomId, ds, slot)] || null;
 }
-
-// Retorna booking de sub-slot :30 (fixo ou manual)
 function getHalfSlot(roomId, ds, halfSlot) {
-  return bookings[fbKey(roomId, ds, halfSlot)] || fixedHalfBooking(roomId, ds, halfSlot) || null;
+  return bookings[fbKey(roomId, ds, halfSlot)] || null;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -543,84 +610,47 @@ function renderRoomTabs() {
 function renderSingle() {
   renderRoomTabs();
   const room = getRoom(currentRoom);
-  const ct = document.getElementById('schedule'); ct.innerHTML = '';
+  const ct   = document.getElementById('schedule'); ct.innerHTML = '';
   if (!room) return;
-  const ds    = dateStr(dateOffset);
-  const slots = getSlotsForOffset(dateOffset);
+  const ds       = dateStr(dateOffset);
+  const timeline = buildTimeline(currentRoom, ds);
 
-  slots.forEach(slot => {
-    const rawVal  = bookings[fbKey(currentRoom, ds, slot)];
-    const booked  = getSlot(currentRoom, ds, slot);
-    const isFixed = booked && booked.includes('📌');
-    const is1h30  = booked && booked.includes('|1h30|');
-
-    // ── Slot principal (hora cheia) ──
-    const row    = document.createElement('div'); row.className = 'srow';
-    const lbl    = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = slot;
+  timeline.forEach(item => {
+    const dur   = item.end - item.start;
+    const label = minToSlot(item.start);
+    const row   = document.createElement('div'); row.className = 'srow';
+    const lbl   = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = label;
     const slotEl = document.createElement('div');
 
-    if (booked) {
-      const displayName = booked.replace(' |1h30|','').replace(' 📌','').trim();
-      const bg     = isFixed ? room.color.light   : '#f0eeea';
-      const border = isFixed ? room.color.hex+'88': '#b0aea8';
-      const color  = isFixed ? room.color.text    : '#2c2b28';
-
+    if (item.type === 'booked') {
+      const isFixed = item.fixed;
+      const bg      = isFixed ? room.color.light    : '#f0eeea';
+      const border  = isFixed ? room.color.hex+'88' : '#b0aea8';
+      const color   = isFixed ? room.color.text     : '#2c2b28';
       slotEl.className = 'slot booked';
       slotEl.style.cssText = `background:${bg};border-color:${border};color:${color};`;
       slotEl.innerHTML = `
-        <span class="bname">${displayName}</span>
+        <span class="bname">${item.name}</span>
         ${isFixed
           ? `<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>`
           : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
-        <span class="btag" style="background:${isFixed?room.color.hex+'22':'#e0ddd8'};color:${isFixed?room.color.text:'#5a5956'}">${is1h30?'1h30':'1h'}</span>
+        <span class="btag" style="background:${isFixed?room.color.hex+'22':'#e0ddd8'};color:${isFixed?room.color.text:'#5a5956'}">${durLabel(dur)}</span>
       `;
-      if (!isFixed) slotEl.onclick = () => openCancelModal(currentRoom, ds, slot, displayName);
-      else slotEl.style.cursor = 'default';
-    } else {
-      slotEl.className = 'slot';
-      slotEl.innerHTML = `<span class="free-lbl">Disponível</span><span class="plus-i">+</span>`;
-      slotEl.onclick = () => openBookModal(currentRoom, ds, slot);
-    }
-    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
-
-    // ── Sub-slot :30 — só aparece quando necessário ──
-    // Aparece se: aula de 1h30 (30min livres) OU tem aula fixa/avulsa no :30
-    const [h]    = slot.split(':').map(Number);
-    const halfSlot = String(h).padStart(2,'0') + ':30';
-    const halfBooked = getHalfSlot(currentRoom, ds, halfSlot);
-    const halfFixed  = halfBooked && halfBooked.includes('📌');
-    const halfIs1h30 = halfBooked && halfBooked.includes('|1h30|');
-
-    if (is1h30 || halfBooked) {
-      const row2  = document.createElement('div'); row2.className = 'srow';
-      const lbl2  = document.createElement('div'); lbl2.className = 'tlbl'; lbl2.textContent = halfSlot;
-      const slot2 = document.createElement('div');
-
-      if (halfBooked) {
-        const dn2  = halfBooked.replace(' |1h30|','').replace(' 📌','').trim();
-        const bg2  = halfFixed ? room.color.light   : '#f0eeea';
-        const brd2 = halfFixed ? room.color.hex+'88': '#b0aea8';
-        const col2 = halfFixed ? room.color.text    : '#2c2b28';
-        slot2.className = 'slot booked';
-        slot2.style.cssText = `background:${bg2};border-color:${brd2};color:${col2};`;
-        slot2.innerHTML = `
-          <span class="bname">${dn2}</span>
-          ${halfFixed
-            ? `<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>`
-            : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
-          <span class="btag" style="background:${halfFixed?room.color.hex+'22':'#e0ddd8'};color:${halfFixed?room.color.text:'#5a5956'}">${halfIs1h30?'1h30':'1h'}</span>
-        `;
-        if (!halfFixed) slot2.onclick = () => openCancelModal(currentRoom, ds, halfSlot, dn2);
-        else slot2.style.cursor = 'default';
+      if (!isFixed) {
+        slotEl.onclick = () => openCancelModal(currentRoom, ds, item.slotKey, item.name);
       } else {
-        // 30 min livres após aula de 1h30
-        slot2.className = 'slot';
-        slot2.style.cssText = 'border-style:dashed;opacity:0.75;';
-        slot2.innerHTML = `<span class="free-lbl">30 min disponíveis</span><span class="plus-i">+</span>`;
-        slot2.onclick = () => openBookModal(currentRoom, ds, halfSlot);
+        slotEl.style.cursor = 'default';
       }
-      row2.appendChild(lbl2); row2.appendChild(slot2); ct.appendChild(row2);
+    } else {
+      // Slot livre — duração disponível
+      slotEl.className = 'slot';
+      if (dur === 30) slotEl.style.cssText = 'border-style:dashed;opacity:0.8;';
+      const freeLabel = dur === 30 ? '30 min disponíveis' : 'Disponível';
+      slotEl.innerHTML = `<span class="free-lbl">${freeLabel}</span><span class="plus-i">+</span>`;
+      slotEl.onclick = () => openBookModal(currentRoom, ds, label, dur);
     }
+
+    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
   });
 }
 
@@ -629,33 +659,26 @@ function renderSingle() {
 // ═══════════════════════════════════════════════════════════
 function renderOverview() {
   const ct = document.getElementById('overview'); ct.innerHTML = '';
-  const ds    = dateStr(dateOffset);
-  const slots = getSlotsForOffset(dateOffset);
+  const ds = dateStr(dateOffset);
   rooms.forEach(room => {
     const sec = document.createElement('div'); sec.className = 'ov-room';
     const hdr = document.createElement('div'); hdr.className = 'ov-room-header';
     hdr.innerHTML = `<div class="ov-dot" style="background:${room.color.hex}"></div><div class="ov-name">${room.icon} ${room.name}</div>`;
     sec.appendChild(hdr);
-    const sDiv = document.createElement('div'); sDiv.className = 'ov-slots';
-    slots.forEach(slot => {
-      const b       = getSlot(room.id, ds, slot);
-      const isFixed = b && b.includes('📌');
-      const is1h30  = b && b.includes('|1h30|');
+    const sDiv    = document.createElement('div'); sDiv.className = 'ov-slots';
+    const timeline = buildTimeline(room.id, ds);
+    timeline.forEach(item => {
       const s = document.createElement('div');
-      s.className = 'ov-slot' + (b ? ' ov-booked' : '');
-      if (b) {
-        s.style.background = isFixed ? room.color.hex : '#7a7874';
-        const name = b.replace(' |1h30|','').replace(' 📌','').trim();
-        s.title = name + (isFixed ? ' · Aula fixa' : ' · Avulsa') + (is1h30 ? ' · 1h30' : ' · 1h');
+      s.className = 'ov-slot' + (item.type==='booked' ? ' ov-booked' : '');
+      s.textContent = minToSlot(item.start);
+      if (item.type === 'booked') {
+        s.style.background = item.fixed ? room.color.hex : '#7a7874';
+        s.title = item.name + (item.fixed ? ' · Aula fixa' : ' · Avulsa') + ' · ' + durLabel(item.end-item.start);
+        if (!item.fixed) s.onclick = () => openCancelModal(room.id, ds, item.slotKey, item.name);
+      } else {
+        s.title = 'Disponível · ' + durLabel(item.end-item.start);
+        s.onclick = () => { currentRoom = room.id; openBookModal(room.id, ds, minToSlot(item.start), item.end-item.start); };
       }
-      s.textContent = slot;
-      s.onclick = () => {
-        if (!b) { currentRoom = room.id; openBookModal(room.id, ds, slot); }
-        else if (!isFixed) {
-          const name = b.replace(' |1h30|','').replace(' 📌','').trim();
-          openCancelModal(room.id, ds, slot, name);
-        }
-      };
       sDiv.appendChild(s);
     });
     sec.appendChild(sDiv); ct.appendChild(sec);
@@ -685,11 +708,13 @@ function renderCalendar() {
 
   function makeCell(date, other) {
     const ds     = dateStrOf(date);
-    const dslots = getSlotsForDateStr(ds);
     const isToday = date.getTime() === today.getTime();
     const isSel   = selectedCalDay && dateStrOf(selectedCalDay) === ds;
+    const tl      = buildTimeline(rooms[0]?.id || '', ds); // quick check any room
     let hasB = false;
-    rooms.forEach(r => { dslots.forEach(s => { if (getSlot(r.id, ds, s)) hasB = true; }); });
+    rooms.forEach(r => {
+      if (buildTimeline(r.id, ds).some(i => i.type==='booked')) hasB = true;
+    });
     const cell = document.createElement('div');
     cell.className = 'cal-day'
       + (other   ? ' other-month' : '')
@@ -708,34 +733,26 @@ function renderCalendar() {
   ct.appendChild(grid);
 
   if (selectedCalDay) {
-    const ds     = dateStrOf(selectedCalDay);
-    const dslots = getSlotsForDateStr(ds);
-    const label  = selectedCalDay.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
+    const ds    = dateStrOf(selectedCalDay);
+    const label = selectedCalDay.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
     const detail = document.createElement('div'); detail.className = 'cal-detail';
     const h3 = document.createElement('h3'); h3.textContent = label; detail.appendChild(h3);
     let count = 0;
     rooms.forEach(room => {
-      dslots.forEach(slot => {
-        const rawVal = bookings[fbKey(room.id, ds, slot)];
-        const b      = getSlot(room.id, ds, slot);
-        if (!b) return;
-        const isCont  = rawVal && rawVal.includes('|cont|');
-        if (isCont) return; // skip continuation slots
+      buildTimeline(room.id, ds).forEach(item => {
+        if (item.type !== 'booked') return;
         count++;
-        const isFixed     = b.endsWith('📌');
-        const is1h30      = rawVal && rawVal.includes('|1h30|');
-        const displayName = isFixed ? b.replace(' 📌','') : (is1h30 ? rawVal.replace(' |1h30|','') : b);
-        const dotColor    = isFixed ? room.color.hex : '#7a7874';
-        const item = document.createElement('div'); item.className = 'cal-item';
-        item.innerHTML = `
-          <div class="cal-item-dot" style="background:${dotColor}"></div>
+        const dur = item.end - item.start;
+        const item2 = document.createElement('div'); item2.className = 'cal-item';
+        item2.innerHTML = `
+          <div class="cal-item-dot" style="background:${item.fixed ? room.color.hex : '#7a7874'}"></div>
           <div>
-            <div class="cal-item-time">${slot}${is1h30 ? ' – 1h30' : ' – 1h'}${isFixed ? ' · Aula fixa' : ' · Avulsa'}</div>
+            <div class="cal-item-time">${minToSlot(item.start)} · ${durLabel(dur)}${item.fixed?' · Aula fixa':' · Avulsa'}</div>
             <div class="cal-item-room">${room.icon} ${room.name}</div>
           </div>
-          <div class="cal-item-name">${displayName}</div>
+          <div class="cal-item-name">${item.name}</div>
         `;
-        detail.appendChild(item);
+        detail.appendChild(item2);
       });
     });
     if (!count) { const em = document.createElement('p'); em.className = 'cal-empty'; em.textContent = 'Nenhuma reserva neste dia.'; detail.appendChild(em); }
@@ -757,56 +774,54 @@ function selectDur(btn) {
   document.getElementById('dur-error').classList.remove('show');
 }
 
-function getNextSlot(slot, ds) {
-  const slots = getSlotsForDateStr(ds);
-  const idx = slots.indexOf(slot);
-  return idx >= 0 && idx < slots.length - 1 ? slots[idx + 1] : null;
-}
-function getSlotAfterNext(slot, ds) {
-  const slots = getSlotsForDateStr(ds);
-  const idx = slots.indexOf(slot);
-  return idx >= 0 && idx < slots.length - 2 ? slots[idx + 2] : null;
-}
-
-function openBookModal(roomId, ds, slot) {
-  pendingSlot = { roomId, ds, slot };
-  const room = getRoom(roomId);
+function openBookModal(roomId, ds, slot, availableMin) {
+  pendingSlot = { roomId, ds, slot, availableMin };
+  const room  = getRoom(roomId);
   document.getElementById('book-title').textContent = 'Reservar — ' + room.name;
   document.getElementById('book-sub').textContent   = formatDateStr(ds) + ' · ' + slot;
   document.getElementById('prof-name').value = '';
   document.getElementById('dur-error').classList.remove('show');
+
+  // Mostra só as durações que cabem no espaço disponível
+  const btn1h   = document.querySelector('.dur-btn[data-slots="2"]');
+  const btn1h30 = document.querySelector('.dur-btn[data-slots="3"]');
+  btn1h.disabled   = availableMin < 60;
+  btn1h30.disabled = availableMin < 90;
+  btn1h.style.opacity   = availableMin < 60  ? '0.35' : '1';
+  btn1h30.style.opacity = availableMin < 90  ? '0.35' : '1';
+
   document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.dur-btn[data-slots="2"]').classList.add('active');
+  if (availableMin >= 60)  btn1h.classList.add('active');
+  if (availableMin < 60)   btn1h30.classList.add('active'); // só 30min disponíveis
+
   document.getElementById('modal-book').classList.add('open');
   setTimeout(() => document.getElementById('prof-name').focus(), 150);
 }
+
 function closeBookModal() { document.getElementById('modal-book').classList.remove('open'); pendingSlot = null; }
+
 function confirmBooking() {
   const name = document.getElementById('prof-name').value.trim();
   if (!name) { document.getElementById('prof-name').focus(); return; }
-  const activeDur = document.querySelector('.dur-btn.active');
-  const is1h30    = activeDur && activeDur.dataset.slots === '3';
-  const { roomId, ds, slot } = pendingSlot;
 
-  // Verificar conflito no slot principal
-  if (getSlot(roomId, ds, slot)) {
-    document.getElementById('dur-error').textContent = 'Este horário já está ocupado.';
+  const activeDur   = document.querySelector('.dur-btn.active:not([disabled])');
+  const is1h30      = activeDur && activeDur.dataset.slots === '3';
+  const durMin      = is1h30 ? 90 : 60;
+  const { roomId, ds, slot, availableMin } = pendingSlot;
+
+  // Se só tem 30min disponíveis, força 30min (reserva curta avulsa)
+  const realDur = (availableMin && availableMin < 60) ? 30 : durMin;
+
+  // Verifica conflito
+  const startMin = slotToMin(slot);
+  const endMin   = startMin + realDur;
+  if (isOccupied(roomId, ds, startMin, endMin)) {
+    document.getElementById('dur-error').textContent = 'Horário em conflito com outra aula.';
     document.getElementById('dur-error').classList.add('show'); return;
   }
 
-  if (is1h30) {
-    // Verificar se o :30 seguinte está livre
-    const [h] = slot.split(':').map(Number);
-    const halfSlot = String(h).padStart(2,'0') + ':30';
-    if (getHalfSlot(roomId, ds, halfSlot)) {
-      document.getElementById('dur-error').textContent = 'Os 30 min seguintes já estão ocupados para 1h30.';
-      document.getElementById('dur-error').classList.add('show'); return;
-    }
-    writeSlot(roomId, ds, slot, name + ' |1h30|');
-  } else {
-    writeSlot(roomId, ds, slot, name);
-  }
-
+  const val = realDur === 90 ? name + ' |1h30|' : name;
+  writeSlot(roomId, ds, slot, val);
   closeBookModal();
   showToast('✓ ' + getRoom(roomId).name + ' reservada para ' + name + '!');
 }
