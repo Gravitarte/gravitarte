@@ -295,7 +295,8 @@ const ADMIN_PASSWORD = "gravitarte2024";
 // ───────────────────────────────────────────────────────────
 const AULAS_FIXAS = [
   // ↓↓ Adicione ou edite as aulas fixas aqui ↓↓
-{ dias:[1,3], sala:"lunar", professor:"Diego Alcântara",  inicio:"21:00", fim:"22:00" },
+ 
+  { dias:[1,3], sala:"lunar", professor:"Diego Alcântara",  inicio:"21:00", fim:"22:00" },
   { dias:[1,3], sala:"lunar", professor:"Mari Mosson",  inicio:"19:00", fim:"20:00" },
 
   { dias:[1,3], sala:"venus", professor:"Jé Zeni",  inicio:"18:00", fim:"19:00" },
@@ -338,7 +339,6 @@ const AULAS_FIXAS = [
   { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"12:30", fim:"13:30" },
   { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"13:30", fim:"14:30" },
   { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"14:30", fim:"15:30" },
-
 
   // ↑↑ Adicione ou edite as aulas fixas aqui ↑↑
 ];
@@ -612,46 +612,100 @@ function renderSingle() {
   const room = getRoom(currentRoom);
   const ct   = document.getElementById('schedule'); ct.innerHTML = '';
   if (!room) return;
-  const ds       = dateStr(dateOffset);
-  const timeline = buildTimeline(currentRoom, ds);
+  const ds     = dateStr(dateOffset);
+  const blocks = getOccupiedBlocks(currentRoom, ds);
 
-  timeline.forEach(item => {
-    const dur   = item.end - item.start;
-    const label = minToSlot(item.start);
-    const row   = document.createElement('div'); row.className = 'srow';
-    const lbl   = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = label;
-    const slotEl = document.createElement('div');
+  function makeBookedSlot(b) {
+    const isFixed = b.fixed;
+    const dur     = b.end - b.start;
+    const bg      = isFixed ? room.color.light    : '#f0eeea';
+    const border  = isFixed ? room.color.hex+'88' : '#b0aea8';
+    const color   = isFixed ? room.color.text     : '#2c2b28';
+    const el = document.createElement('div');
+    el.className = 'slot booked';
+    el.style.cssText = `background:${bg};border-color:${border};color:${color};`;
+    el.innerHTML = `
+      <span class="bname">${b.name}</span>
+      ${isFixed
+        ? `<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>`
+        : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
+      <span class="btag" style="background:${isFixed?room.color.hex+'22':'#e0ddd8'};color:${isFixed?room.color.text:'#5a5956'}">${durLabel(dur)}</span>
+    `;
+    if (!isFixed) el.onclick = () => openCancelModal(currentRoom, ds, b.slotKey, b.name);
+    else el.style.cursor = 'default';
+    return el;
+  }
 
-    if (item.type === 'booked') {
-      const isFixed = item.fixed;
-      const bg      = isFixed ? room.color.light    : '#f0eeea';
-      const border  = isFixed ? room.color.hex+'88' : '#b0aea8';
-      const color   = isFixed ? room.color.text     : '#2c2b28';
-      slotEl.className = 'slot booked';
-      slotEl.style.cssText = `background:${bg};border-color:${border};color:${color};`;
-      slotEl.innerHTML = `
-        <span class="bname">${item.name}</span>
-        ${isFixed
-          ? `<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>`
-          : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
-        <span class="btag" style="background:${isFixed?room.color.hex+'22':'#e0ddd8'};color:${isFixed?room.color.text:'#5a5956'}">${durLabel(dur)}</span>
-      `;
-      if (!isFixed) {
-        slotEl.onclick = () => openCancelModal(currentRoom, ds, item.slotKey, item.name);
-      } else {
-        slotEl.style.cursor = 'default';
+  function makeFreeSlot(slotLabel, availMin) {
+    const el = document.createElement('div');
+    el.className = 'slot';
+    if (availMin === 30) el.style.cssText = 'border-style:dashed;opacity:0.85;';
+    el.innerHTML = availMin === 30
+      ? `<span class="free-lbl">30 min disponíveis</span><span class="plus-i">+</span>`
+      : `<span class="free-lbl">Disponível</span><span class="plus-i">+</span>`;
+    el.onclick = () => openBookModal(currentRoom, ds, slotLabel, availMin);
+    return el;
+  }
+
+  function addRow(timeLabel, slotEl) {
+    const row = document.createElement('div'); row.className = 'srow';
+    const lbl = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = timeLabel;
+    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
+  }
+
+  // Percorre TODAS as horas cheias de 07:00 a 21:00 — sempre visíveis
+  for (let hMin = DAY_START; hMin < DAY_END; hMin += 60) {
+    const hourLabel = minToSlot(hMin);
+    const halfMin   = hMin + 30;
+    const halfLabel = minToSlot(halfMin);
+
+    const bHour = blocks.find(b => b.start === hMin);        // bloco na hora cheia
+    const bHalf = blocks.find(b => b.start === halfMin);     // bloco no :30
+    const bPrev = blocks.find(b => b.start < hMin && b.end > hMin); // cobre esta hora
+
+    if (bPrev) {
+      // Esta hora está coberta por aula de 1h30 iniciada antes → não mostra linha da hora
+      // (o :30 desta hora é o fim de uma aula de 1h30 → mostra só se há aula no :30)
+      if (bHalf) {
+        addRow(halfLabel, makeBookedSlot(bHalf));
+        // se essa aula de :30 for 1h30, o :30 seguinte fica livre (tratado na próxima iteração)
+      }
+    } else if (bHour) {
+      // Aula começa na hora cheia
+      addRow(hourLabel, makeBookedSlot(bHour));
+      const dur = bHour.end - bHour.start;
+      if (dur === 90) {
+        // Aula de 1h30 → após ela (hMin+90) sobra 30min até a próxima hora cheia
+        const freeStart = hMin + 90;
+        if (freeStart < DAY_END) {
+          const freeLbl = minToSlot(freeStart);
+          const nextOccupied = blocks.find(b => b.start === freeStart);
+          if (!nextOccupied) {
+            addRow(freeLbl, makeFreeSlot(freeLbl, 30));
+          }
+        }
+      }
+    } else if (bHalf) {
+      // Hora cheia livre, mas aula começa no :30
+      addRow(hourLabel, makeFreeSlot(hourLabel, 30));
+      addRow(halfLabel, makeBookedSlot(bHalf));
+      const dur = bHalf.end - bHalf.start;
+      if (dur === 90) {
+        // Aula de 1h30 no :30 → sobra 30min no :30 da hora seguinte
+        const freeStart = halfMin + 90;
+        if (freeStart < DAY_END) {
+          const freeLbl = minToSlot(freeStart);
+          const nextOccupied = blocks.find(b => b.start === freeStart);
+          if (!nextOccupied) {
+            addRow(freeLbl, makeFreeSlot(freeLbl, 30));
+          }
+        }
       }
     } else {
-      // Slot livre — duração disponível
-      slotEl.className = 'slot';
-      if (dur === 30) slotEl.style.cssText = 'border-style:dashed;opacity:0.8;';
-      const freeLabel = dur === 30 ? '30 min disponíveis' : 'Disponível';
-      slotEl.innerHTML = `<span class="free-lbl">${freeLabel}</span><span class="plus-i">+</span>`;
-      slotEl.onclick = () => openBookModal(currentRoom, ds, label, dur);
+      // Hora completamente livre
+      addRow(hourLabel, makeFreeSlot(hourLabel, 60));
     }
-
-    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
-  });
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
