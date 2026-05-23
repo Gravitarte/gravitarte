@@ -220,10 +220,11 @@
     <input class="field-input" type="text" id="prof-name" placeholder="Ex: Ana Silva" maxlength="40"/>
     <label class="field-label">Duração da aula</label>
     <div class="dur-row" id="dur-row">
-      <button class="dur-btn" data-slots="2" onclick="selectDur(this)">1 hora</button>
-      <button class="dur-btn active" data-slots="3" onclick="selectDur(this)">1h30</button>
+      <button class="dur-btn" data-dur="30"  onclick="selectDur(this)">30 min</button>
+      <button class="dur-btn" data-dur="60"  onclick="selectDur(this)">1 hora</button>
+      <button class="dur-btn" data-dur="90"  onclick="selectDur(this)">1h30</button>
     </div>
-    <p class="error-msg" id="dur-error">Horário seguinte já está ocupado para 1h30.</p>
+    <p class="error-msg" id="dur-error"></p>
     <div class="modal-actions">
       <button class="btn" onclick="closeBookModal()">Cancelar</button>
       <button class="btn btn-primary" onclick="confirmBooking()">Reservar</button>
@@ -272,7 +273,7 @@
 // 🔒 SENHA DO ADMINISTRADOR
 // Para trocar a senha, altere apenas o valor abaixo:
 // ───────────────────────────────────────────────────────────
-const ADMIN_PASSWORD = "gravitarte2024";
+const ADMIN_PASSWORD = "24";
 
 // ───────────────────────────────────────────────────────────
 // 📋 AULAS FIXAS / REGULARES
@@ -295,51 +296,42 @@ const ADMIN_PASSWORD = "gravitarte2024";
 // ───────────────────────────────────────────────────────────
 const AULAS_FIXAS = [
   // ↓↓ Adicione ou edite as aulas fixas aqui ↓↓
- 
-  { dias:[1,3], sala:"lunar", professor:"Diego Alcântara",  inicio:"21:00", fim:"22:00" },
-  { dias:[1,3], sala:"lunar", professor:"Mari Mosson",  inicio:"19:00", fim:"20:00" },
-
-  { dias:[1,3], sala:"venus", professor:"Jé Zeni",  inicio:"18:00", fim:"19:00" },
-  { dias:[1,3], sala:"venus", professor:"Karine",  inicio:"19:00", fim:"20:00" },
-  { dias:[1,3], sala:"venus", professor:"Iago",  inicio:"20:00", fim:"21:00" },
-  { dias:[1,3], sala:"venus", professor:"Isys Caldas",  inicio:"21:00", fim:"22:30" },
-
-  { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"08:00", fim:"09:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"09:00", fim:"10:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Mosson",  inicio:"12:30", fim:"13:30" },
-  { dias:[1,3], sala:"solar", professor:"Babi Stemp",  inicio:"17:00", fim:"18:00" },
-  { dias:[1,3], sala:"solar", professor:"Babi Stemp",  inicio:"18:00", fim:"19:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"19:00", fim:"20:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"20:00", fim:"21:00" },
-  { dias:[1,3], sala:"solar", professor:"Mari Souza",  inicio:"21:00", fim:"22:00" },
-
-  { dias:[2,4], sala:"solar", professor:"Mari Souza",  inicio:"07:30", fim:"08:30" },
-  { dias:[2,4], sala:"solar", professor:"Mari Souza",  inicio:"08:30", fim:"09:30" },
-  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"16:30", fim:"17:30" },
-  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"17:30", fim:"18:30" },
-  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"19:30", fim:"20:30" },
-  { dias:[2,4], sala:"solar", professor:"Mari Mosson",  inicio:"20:30", fim:"21:30" },
-  { dias:[2], sala:"solar", professor:"Mari Souza",  inicio:"18:30", fim:"19:30" },
-  { dias:[4], sala:"solar", professor:"Mari Mosson",  inicio:"18:30", fim:"19:30" },
-
-  { dias:[2], sala:"lunar", professor:"Mari Souza",  inicio:"20:30", fim:"21:30" },
-
-  { dias:[4], sala:"venus", professor:"Isys Caldas",  inicio:"7:30", fim:"8:30" },
-  { dias:[2,4], sala:"venus", professor:"Jé Zeni",  inicio:"18:30", fim:"19:30" },
-  { dias:[2,4], sala:"venus", professor:"Jé Zeni",  inicio:"19:30", fim:"20:30" },
-  { dias:[2,4], sala:"venus", professor:"Babi Stemp",  inicio:"20:30", fim:"21:30" },
-
-  { dias:[5], sala:"venus", professor:"Chrystyam",  inicio:"20:00", fim:"21:00" },
-  { dias:[5], sala:"solar", professor:"Mari Souza",  inicio:"18:00", fim:"19:00" },
-  { dias:[5], sala:"solar", professor:"Mari Souza",  inicio:"19:00", fim:"20:00" },
-  { dias:[5], sala:"solar", professor:"Jé Zeni",  inicio:"20:30", fim:"21:30" },
-
-  { dias:[6], sala:"solar", professor:"Babi Stemp",  inicio:"9:30", fim:"10:30" },
-  { dias:[6], sala:"solar", professor:"Babi Stemp",  inicio:"10:30", fim:"11:30" },
-  { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"12:30", fim:"13:30" },
-  { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"13:30", fim:"14:30" },
-  { dias:[6], sala:"solar", professor:"Jé Zeni",  inicio:"14:30", fim:"15:30" },
-
+  { dias:[1,3], sala:"lunar",   professor:"Diego Alcântara", inicio:"21:00", fim:"22:00" },
+  { dias:[1,3], sala:"lunar",   professor:"Mari Mosson",     inicio:"19:00", fim:"20:00" },
+  { dias:[1,3], sala:"venus",   professor:"Jé Zeni",         inicio:"18:00", fim:"19:00" },
+  { dias:[1,3], sala:"venus",   professor:"Karine",          inicio:"19:00", fim:"20:00" },
+  { dias:[1,3], sala:"venus",   professor:"Iago",            inicio:"20:00", fim:"21:00" },
+  { dias:[1,3], sala:"venus",   professor:"Isys Caldas",     inicio:"21:00", fim:"22:30" },
+  { dias:[1,3], sala:"galaxia", professor:"Mari Mosson",     inicio:"08:00", fim:"09:00" },
+  { dias:[1,3], sala:"galaxia", professor:"Mari Mosson",     inicio:"09:00", fim:"10:00" },
+  { dias:[1,3], sala:"galaxia", professor:"Mari Mosson",     inicio:"12:30", fim:"13:30" },
+  { dias:[1,3], sala:"galaxia", professor:"Babi Stemp",      inicio:"17:00", fim:"18:00" },
+  { dias:[1,3], sala:"galaxia", professor:"Babi Stemp",      inicio:"18:00", fim:"19:00" },
+  { dias:[1,3], sala:"galaxia", professor:"Mari Souza",      inicio:"19:00", fim:"20:00" },
+  { dias:[1,3], sala:"galaxia", professor:"Mari Souza",      inicio:"20:00", fim:"21:00" },
+  { dias:[1,3], sala:"galaxia", professor:"Mari Souza",      inicio:"21:00", fim:"22:00" },
+  { dias:[2,4], sala:"galaxia", professor:"Mari Souza",      inicio:"07:30", fim:"08:30" },
+  { dias:[2,4], sala:"galaxia", professor:"Mari Souza",      inicio:"08:30", fim:"09:30" },
+  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"16:30", fim:"17:30" },
+  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"17:30", fim:"18:30" },
+  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"19:30", fim:"20:30" },
+  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"20:30", fim:"21:30" },
+  { dias:[2],   sala:"galaxia", professor:"Mari Souza",      inicio:"18:30", fim:"19:30" },
+  { dias:[4],   sala:"galaxia", professor:"Mari Mosson",     inicio:"18:30", fim:"19:30" },
+  { dias:[2],   sala:"lunar",   professor:"Mari Souza",      inicio:"20:30", fim:"21:30" },
+  { dias:[4],   sala:"venus",   professor:"Isys Caldas",     inicio:"07:30", fim:"08:30" },
+  { dias:[2,4], sala:"venus",   professor:"Jé Zeni",         inicio:"18:30", fim:"19:30" },
+  { dias:[2,4], sala:"venus",   professor:"Jé Zeni",         inicio:"19:30", fim:"20:30" },
+  { dias:[2,4], sala:"venus",   professor:"Babi Stemp",      inicio:"20:30", fim:"21:30" },
+  { dias:[5],   sala:"venus",   professor:"Chrystyam",       inicio:"20:00", fim:"21:00" },
+  { dias:[5],   sala:"galaxia", professor:"Mari Souza",      inicio:"18:00", fim:"19:00" },
+  { dias:[5],   sala:"galaxia", professor:"Mari Souza",      inicio:"19:00", fim:"20:00" },
+  { dias:[5],   sala:"galaxia", professor:"Jé Zeni",         inicio:"20:30", fim:"21:30" },
+  { dias:[6],   sala:"galaxia", professor:"Babi Stemp",      inicio:"09:30", fim:"10:30" },
+  { dias:[6],   sala:"galaxia", professor:"Babi Stemp",      inicio:"10:30", fim:"11:30" },
+  { dias:[6],   sala:"galaxia", professor:"Jé Zeni",         inicio:"12:30", fim:"13:30" },
+  { dias:[6],   sala:"galaxia", professor:"Jé Zeni",         inicio:"13:30", fim:"14:30" },
+  { dias:[6],   sala:"galaxia", professor:"Jé Zeni",         inicio:"14:30", fim:"15:30" },
   // ↑↑ Adicione ou edite as aulas fixas aqui ↑↑
 ];
 
@@ -383,21 +375,32 @@ function getOccupiedBlocks(roomId, ds) {
     if (!a.dias.includes(dow)) continue;
     const start = slotToMin(a.inicio);
     const end   = slotToMin(a.fim);
-    blocks.push({ start, end, name: a.professor, fixed: true });
+    if (isNaN(start) || isNaN(end) || end <= start) continue;
+    blocks.push({ start, end, name: a.professor, fixed: true, slotKey: a.inicio });
   }
 
   // Reservas manuais (no Firebase)
   for (const [key, val] of Object.entries(bookings)) {
+    if (!val || typeof val !== 'string') continue;
     if (!key.startsWith(roomId + '__' + ds + '__')) continue;
     const slotPart = key.split('__')[2].replace('-',':');
     const start    = slotToMin(slotPart);
-    const dur      = val.includes('|1h30|') ? 90 : 60;
-    const end      = start + dur;
-    const name     = val.replace(' |1h30|','').trim();
+    if (isNaN(start)) continue;
+    // Duração declarada
+    let dur = val.includes('|1h30|') ? 90 : val.includes('|30min|') ? 30 : 60;
+    // Segurança: se a duração declarada colidir com aula fixa, reduz para caber
+    const fixedBlocks = blocks.filter(b => b.fixed);
+    for (const fb of fixedBlocks) {
+      if (fb.start >= start && fb.start < start + dur) {
+        dur = fb.start - start; // reduz até o início da aula fixa
+      }
+    }
+    if (dur <= 0) continue; // descarta se não tem espaço
+    const end  = start + dur;
+    const name = val.replace(' |1h30|','').replace(' |30min|','').trim();
     blocks.push({ start, end, name, fixed: false, raw: val, slotKey: slotPart });
   }
 
-  // Ordena por início e remove sobreposições
   blocks.sort((a,b) => a.start - b.start);
   return blocks;
 }
@@ -654,56 +657,87 @@ function renderSingle() {
   }
 
   // Percorre TODAS as horas cheias de 07:00 a 21:00 — sempre visíveis
+  // Rastreia quais labels já foram adicionados para evitar duplicatas
+  const rendered = new Set();
+
+  function addRowOnce(timeLabel, slotEl) {
+    if (rendered.has(timeLabel)) return;
+    rendered.add(timeLabel);
+    const row = document.createElement('div'); row.className = 'srow';
+    const lbl = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = timeLabel;
+    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
+  }
+
   for (let hMin = DAY_START; hMin < DAY_END; hMin += 60) {
     const hourLabel = minToSlot(hMin);
     const halfMin   = hMin + 30;
     const halfLabel = minToSlot(halfMin);
 
-    const bHour = blocks.find(b => b.start === hMin);        // bloco na hora cheia
-    const bHalf = blocks.find(b => b.start === halfMin);     // bloco no :30
-    const bPrev = blocks.find(b => b.start < hMin && b.end > hMin); // cobre esta hora
+    const bHour = blocks.find(b => b.start === hMin);
+    const bHalf = blocks.find(b => b.start === halfMin);
+    const bPrev = blocks.find(b => b.start < hMin && b.end > hMin);
 
     if (bPrev) {
-      // Esta hora está coberta por aula de 1h30 iniciada antes → não mostra linha da hora
-      // (o :30 desta hora é o fim de uma aula de 1h30 → mostra só se há aula no :30)
+      // Esta hora está coberta por bloco anterior — não mostra a hora cheia
+      // Mas verifica se o :30 desta hora tem bloco próprio ou é o fim do bPrev
       if (bHalf) {
-        addRow(halfLabel, makeBookedSlot(bHalf));
-        // se essa aula de :30 for 1h30, o :30 seguinte fica livre (tratado na próxima iteração)
+        addRowOnce(halfLabel, makeBookedSlot(bHalf));
+        if (bHalf.end - bHalf.start === 90) {
+          const freeStart = halfMin + 90;
+          if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
+            addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
+          }
+        }
+      } else if (bPrev.end === halfMin) {
+        // bPrev termina no :30 desta hora → 30min livres
+        addRowOnce(halfLabel, makeFreeSlot(halfLabel, 30));
       }
+      // se bPrev.end === hMin+60 (hora seguinte), não faz nada — a próxima iteração trata
+
     } else if (bHour) {
-      // Aula começa na hora cheia
-      addRow(hourLabel, makeBookedSlot(bHour));
+      addRowOnce(hourLabel, makeBookedSlot(bHour));
       const dur = bHour.end - bHour.start;
       if (dur === 90) {
-        // Aula de 1h30 → após ela (hMin+90) sobra 30min até a próxima hora cheia
         const freeStart = hMin + 90;
-        if (freeStart < DAY_END) {
-          const freeLbl = minToSlot(freeStart);
-          const nextOccupied = blocks.find(b => b.start === freeStart);
-          if (!nextOccupied) {
-            addRow(freeLbl, makeFreeSlot(freeLbl, 30));
+        if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
+          addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
+        }
+      } else if (dur < 60) {
+        // Reserva curta (30min) — há espaço no :30, mostra o que estiver lá
+        if (bHalf) {
+          addRowOnce(halfLabel, makeBookedSlot(bHalf));
+          if (bHalf.end - bHalf.start === 90) {
+            const freeStart = halfMin + 90;
+            if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
+              addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
+            }
           }
+        } else {
+          // :30 livre após reserva de 30min
+          addRowOnce(halfLabel, makeFreeSlot(halfLabel, freeMinutesFrom(currentRoom, ds, halfMin)));
         }
       }
+
     } else if (bHalf) {
-      // Hora cheia livre, mas aula começa no :30
-      addRow(hourLabel, makeFreeSlot(hourLabel, 30));
-      addRow(halfLabel, makeBookedSlot(bHalf));
+      // Hora cheia livre, aula começa no :30
+      addRowOnce(hourLabel, makeFreeSlot(hourLabel, 30));
+      addRowOnce(halfLabel, makeBookedSlot(bHalf));
       const dur = bHalf.end - bHalf.start;
       if (dur === 90) {
-        // Aula de 1h30 no :30 → sobra 30min no :30 da hora seguinte
+        // 1h30 no :30 → termina em halfMin+90 (próxima hora cheia + 30min)
+        // Mostra o slot livre de 30min após o bloco
         const freeStart = halfMin + 90;
-        if (freeStart < DAY_END) {
-          const freeLbl = minToSlot(freeStart);
-          const nextOccupied = blocks.find(b => b.start === freeStart);
-          if (!nextOccupied) {
-            addRow(freeLbl, makeFreeSlot(freeLbl, 30));
-          }
+        if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
+          addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
         }
+        // Marca a hora cheia seguinte como "já tratada pelo bPrev" — não precisa fazer nada
+        // (a iteração seguinte verá bPrev e não mostrará duplicata graças ao addRowOnce)
       }
+      // se 1h no :30 → termina na hora cheia seguinte, sem sobra
+
     } else {
       // Hora completamente livre
-      addRow(hourLabel, makeFreeSlot(hourLabel, 60));
+      addRowOnce(hourLabel, makeFreeSlot(hourLabel, 60));
     }
   }
 }
@@ -714,27 +748,91 @@ function renderSingle() {
 function renderOverview() {
   const ct = document.getElementById('overview'); ct.innerHTML = '';
   const ds = dateStr(dateOffset);
+
   rooms.forEach(room => {
     const sec = document.createElement('div'); sec.className = 'ov-room';
     const hdr = document.createElement('div'); hdr.className = 'ov-room-header';
     hdr.innerHTML = `<div class="ov-dot" style="background:${room.color.hex}"></div><div class="ov-name">${room.icon} ${room.name}</div>`;
     sec.appendChild(hdr);
-    const sDiv    = document.createElement('div'); sDiv.className = 'ov-slots';
-    const timeline = buildTimeline(room.id, ds);
-    timeline.forEach(item => {
-      const s = document.createElement('div');
-      s.className = 'ov-slot' + (item.type==='booked' ? ' ov-booked' : '');
-      s.textContent = minToSlot(item.start);
-      if (item.type === 'booked') {
-        s.style.background = item.fixed ? room.color.hex : '#7a7874';
-        s.title = item.name + (item.fixed ? ' · Aula fixa' : ' · Avulsa') + ' · ' + durLabel(item.end-item.start);
-        if (!item.fixed) s.onclick = () => openCancelModal(room.id, ds, item.slotKey, item.name);
-      } else {
-        s.title = 'Disponível · ' + durLabel(item.end-item.start);
-        s.onclick = () => { currentRoom = room.id; openBookModal(room.id, ds, minToSlot(item.start), item.end-item.start); };
+
+    const sDiv   = document.createElement('div'); sDiv.className = 'ov-slots';
+    const blocks = getOccupiedBlocks(room.id, ds);
+    const renderedOv = new Set();
+
+    // Mesma lógica do renderSingle: grade fixa horária + extras quando necessário
+    for (let hMin = DAY_START; hMin < DAY_END; hMin += 60) {
+      const hourLabel = minToSlot(hMin);
+      const halfMin   = hMin + 30;
+      const halfLabel = minToSlot(halfMin);
+      const bHour = blocks.find(b => b.start === hMin);
+      const bHalf = blocks.find(b => b.start === halfMin);
+      const bPrev = blocks.find(b => b.start < hMin && b.end > hMin);
+
+      function makeOvSlot(label, block, availMin) {
+        const s = document.createElement('div');
+        if (block) {
+          s.className = 'ov-slot ov-booked';
+          s.style.background = block.fixed ? room.color.hex : '#7a7874';
+          s.title = block.name + (block.fixed ? ' · Aula fixa' : ' · Avulsa') + ' · ' + durLabel(block.end - block.start);
+          s.textContent = label;
+          if (!block.fixed) s.onclick = () => openCancelModal(room.id, ds, block.slotKey, block.name);
+        } else {
+          s.className = 'ov-slot';
+          s.title = availMin === 30 ? '30 min disponíveis' : 'Disponível';
+          s.textContent = label;
+          s.style.opacity = availMin === 30 ? '0.6' : '1';
+          s.onclick = () => { currentRoom = room.id; openBookModal(room.id, ds, label, availMin || 60); };
+        }
+        return s;
       }
-      sDiv.appendChild(s);
-    });
+
+      if (bPrev) {
+        if (bHalf) {
+          renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, bHalf, null)));
+          if (bHalf.end - bHalf.start === 90) {
+            const fs = halfMin + 90;
+            if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
+              renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
+            }
+          }
+        } else if (bPrev.end === halfMin && !renderedOv.has(halfLabel)) {
+          renderedOv.add(halfLabel); sDiv.appendChild(makeOvSlot(halfLabel, null, 30));
+        }
+      } else if (bHour) {
+        renderedOv.has(hourLabel) || (renderedOv.add(hourLabel), sDiv.appendChild(makeOvSlot(hourLabel, bHour, null)));
+        const durHour = bHour.end - bHour.start;
+        if (durHour === 90) {
+          const fs = hMin + 90;
+          if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
+            renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
+          }
+        } else if (durHour < 60) {
+          if (bHalf) {
+            renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, bHalf, null)));
+            if (bHalf.end - bHalf.start === 90) {
+              const fs = halfMin + 90;
+              if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
+                renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
+              }
+            }
+          } else {
+            renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, null, 30)));
+          }
+        }
+      } else if (bHalf) {
+        renderedOv.has(hourLabel) || (renderedOv.add(hourLabel), sDiv.appendChild(makeOvSlot(hourLabel, null, 30)));
+        renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, bHalf, null)));
+        if (bHalf.end - bHalf.start === 90) {
+          const fs = halfMin + 90;
+          if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
+            renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
+          }
+        }
+      } else {
+        renderedOv.has(hourLabel) || (renderedOv.add(hourLabel), sDiv.appendChild(makeOvSlot(hourLabel, null, 60)));
+      }
+    }
+
     sec.appendChild(sDiv); ct.appendChild(sec);
   });
 }
@@ -822,31 +920,47 @@ function calNav(dir) {
 // ═══════════════════════════════════════════════════════════
 // MODAIS
 // ═══════════════════════════════════════════════════════════
+// Calcula quantos minutos livres existem a partir de startMin numa sala+dia
+function freeMinutesFrom(roomId, ds, startMin) {
+  const blocks = getOccupiedBlocks(roomId, ds);
+  // Próximo bloco que começa DEPOIS de startMin
+  const next = blocks.filter(b => b.start >= startMin + 1).sort((a,b) => a.start - b.start)[0];
+  const freeUntil = next ? next.start : DAY_END;
+  return freeUntil - startMin;
+}
+
 function selectDur(btn) {
+  if (btn.disabled) return;
   document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('dur-error').classList.remove('show');
 }
 
 function openBookModal(roomId, ds, slot, availableMin) {
-  pendingSlot = { roomId, ds, slot, availableMin };
+  const startMin = slotToMin(slot);
+  const realFree = freeMinutesFrom(roomId, ds, startMin);
+
+  pendingSlot = { roomId, ds, slot, freeMin: realFree };
   const room  = getRoom(roomId);
   document.getElementById('book-title').textContent = 'Reservar — ' + room.name;
   document.getElementById('book-sub').textContent   = formatDateStr(ds) + ' · ' + slot;
   document.getElementById('prof-name').value = '';
   document.getElementById('dur-error').classList.remove('show');
+  document.getElementById('dur-error').textContent = '';
 
-  // Mostra só as durações que cabem no espaço disponível
-  const btn1h   = document.querySelector('.dur-btn[data-slots="2"]');
-  const btn1h30 = document.querySelector('.dur-btn[data-slots="3"]');
-  btn1h.disabled   = availableMin < 60;
-  btn1h30.disabled = availableMin < 90;
-  btn1h.style.opacity   = availableMin < 60  ? '0.35' : '1';
-  btn1h30.style.opacity = availableMin < 90  ? '0.35' : '1';
+  // Habilita/desabilita botões conforme espaço livre real
+  document.querySelectorAll('.dur-btn').forEach(btn => {
+    const dur = parseInt(btn.dataset.dur);
+    const ok  = realFree >= dur;
+    btn.disabled      = !ok;
+    btn.style.opacity = ok ? '1' : '0.3';
+    btn.classList.remove('active');
+  });
 
-  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
-  if (availableMin >= 60)  btn1h.classList.add('active');
-  if (availableMin < 60)   btn1h30.classList.add('active'); // só 30min disponíveis
+  // Seleciona o maior disponível como padrão (1h preferível a 30min)
+  const preferred = realFree >= 60 ? '60' : '30';
+  const defaultBtn = document.querySelector(`.dur-btn[data-dur="${preferred}"]:not([disabled])`);
+  if (defaultBtn) defaultBtn.classList.add('active');
 
   document.getElementById('modal-book').classList.add('open');
   setTimeout(() => document.getElementById('prof-name').focus(), 150);
@@ -858,23 +972,23 @@ function confirmBooking() {
   const name = document.getElementById('prof-name').value.trim();
   if (!name) { document.getElementById('prof-name').focus(); return; }
 
-  const activeDur   = document.querySelector('.dur-btn.active:not([disabled])');
-  const is1h30      = activeDur && activeDur.dataset.slots === '3';
-  const durMin      = is1h30 ? 90 : 60;
-  const { roomId, ds, slot, availableMin } = pendingSlot;
+  const activeBtn = document.querySelector('.dur-btn.active:not([disabled])');
+  if (!activeBtn) {
+    document.getElementById('dur-error').textContent = 'Selecione a duração da aula.';
+    document.getElementById('dur-error').classList.add('show'); return;
+  }
 
-  // Se só tem 30min disponíveis, força 30min (reserva curta avulsa)
-  const realDur = (availableMin && availableMin < 60) ? 30 : durMin;
-
-  // Verifica conflito
+  const dur      = parseInt(activeBtn.dataset.dur);
+  const { roomId, ds, slot, freeMin } = pendingSlot;
   const startMin = slotToMin(slot);
-  const endMin   = startMin + realDur;
-  if (isOccupied(roomId, ds, startMin, endMin)) {
+
+  // Verificação final de conflito
+  if (isOccupied(roomId, ds, startMin, startMin + dur)) {
     document.getElementById('dur-error').textContent = 'Horário em conflito com outra aula.';
     document.getElementById('dur-error').classList.add('show'); return;
   }
 
-  const val = realDur === 90 ? name + ' |1h30|' : name;
+  const val = dur === 90 ? name + ' |1h30|' : dur === 30 ? name + ' |30min|' : name;
   writeSlot(roomId, ds, slot, val);
   closeBookModal();
   showToast('✓ ' + getRoom(roomId).name + ' reservada para ' + name + '!');
