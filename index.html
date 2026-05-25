@@ -296,7 +296,6 @@ const ADMIN_PASSWORD = "24";
 // ───────────────────────────────────────────────────────────
 const AULAS_FIXAS = [
   // ↓↓ Adicione ou edite as aulas fixas aqui ↓↓
-
   { dias:[1,3], sala:"lunar",   professor:"Diego Alcântara", inicio:"21:00", fim:"22:00" },
   { dias:[1,3], sala:"lunar",   professor:"Mari Mosson",     inicio:"19:00", fim:"20:00" },
   { dias:[1,3], sala:"venus",   professor:"Jé Zeni",         inicio:"18:00", fim:"19:00" },
@@ -354,8 +353,8 @@ const AULAS_FIXAS = [
 //    próximo bloco ocupado (pode ser 30min, 1h, 1h30, etc.)
 // ═══════════════════════════════════════════════════════════
 
-const DAY_START = 7 * 60;   // 07:00 em minutos
-const DAY_END   = 21 * 60;  // 21:00 em minutos
+const DAY_START = 7 * 60;    // 07:00 em minutos
+const DAY_END   = 22 * 60 + 30;  // 22:30 em minutos
 
 function minToSlot(m) {
   return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
