@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#12111a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+  <meta name="theme-color" content="#12111a"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
   <title>GRAVITARTE — Agendamento</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 
   <script type="module">
     import { initializeApp }                          from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-    // ─── COLE AQUI SUAS CONFIGURAÇÕES DO FIREBASE ───────────
+    // ─── COLE AQUI SUAS CONFIGURAÇÕES DO FIREBASE ───
     const firebaseConfig = {
       apiKey:            "AIzaSyDMxeSOUIzSbl8r1niy83_Da66_x0Wt8rQ",
       authDomain:        "gravitarte-57011.firebaseapp.com",
@@ -22,8 +21,7 @@
       messagingSenderId: "657622099981",
       appId:             "1:657622099981:web:5724a4d5b56288f5a44d44"
     };
-    // ────────────────────────────────────────────────────────
-
+    // ────────────────────────────────────────────────
     const app = initializeApp(firebaseConfig);
     const db  = getDatabase(app);
     window._fb = { db, ref, set, remove, onValue };
@@ -31,144 +29,141 @@
   </script>
 
   <style>
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-    :root {
-      --bg:#f6f5f1; --surface:#fff; --surface2:#eeece7;
-      --border:rgba(0,0,0,.09); --border2:rgba(0,0,0,.16);
-      --text:#12111a; --text2:#6b6a6a; --text3:#a8a7a1;
-      --accent:#12111a; --radius:14px; --rsm:9px;
-      --shadow:0 1px 4px rgba(0,0,0,.07);
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    :root{
+      --bg:#f6f5f1;--surface:#fff;--surface2:#eeece7;
+      --border:rgba(0,0,0,.09);--border2:rgba(0,0,0,.16);
+      --text:#12111a;--text2:#6b6a6a;--text3:#a8a7a1;
+      --accent:#12111a;--radius:14px;--rsm:9px;--shadow:0 1px 4px rgba(0,0,0,.07)
     }
-    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-    .app { max-width:430px; margin:0 auto; min-height:100vh; background:var(--bg); }
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+    .app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg)}
 
     /* HEADER */
-    .header { background:var(--accent); color:#fff; padding:3rem 1.25rem 1rem; position:sticky; top:0; z-index:20; }
-    .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:.9rem; }
-    .logo-name { font-size:22px; font-weight:600; letter-spacing:1.5px; }
-    .logo-sub  { font-size:11px; opacity:.4; letter-spacing:.5px; margin-left:6px; }
-    .settings-btn { background:rgba(255,255,255,.11); border:none; color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:17px; display:flex; align-items:center; justify-content:center; }
-    .date-nav { display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,.08); border-radius:var(--rsm); padding:5px 8px; }
-    .date-nav button { background:none; border:none; color:rgba(255,255,255,.8); font-size:22px; cursor:pointer; padding:3px 8px; border-radius:6px; line-height:1; }
-    .date-label { font-size:13px; font-weight:500; color:#fff; text-align:center; flex:1; text-transform:capitalize; }
-    .sync-badge { display:inline-flex; align-items:center; gap:5px; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:500; }
-    .sync-badge.ok   { background:rgba(29,158,117,.2); color:#0f6e56; }
-    .sync-badge.err  { background:rgba(211,68,48,.15);  color:#993c1d; }
-    .sync-badge.wait { background:rgba(255,255,255,.1); color:rgba(255,255,255,.6); }
-    .sync-dot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+    .header{background:var(--accent);color:#fff;padding:3rem 1.25rem 1rem;position:sticky;top:0;z-index:20}
+    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+    .logo-name{font-size:22px;font-weight:600;letter-spacing:1.5px}
+    .logo-sub{font-size:11px;opacity:.4;letter-spacing:.5px;margin-left:6px}
+    .settings-btn{background:rgba(255,255,255,.11);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center}
+    .sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500}
+    .sync-badge.ok{background:rgba(29,158,117,.2);color:#0f6e56}
+    .sync-badge.err{background:rgba(211,68,48,.15);color:#993c1d}
+    .sync-badge.wait{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+    .sync-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+    .date-nav{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.08);border-radius:var(--rsm);padding:5px 8px}
+    .date-nav button{background:none;border:none;color:rgba(255,255,255,.8);font-size:22px;cursor:pointer;padding:3px 8px;border-radius:6px;line-height:1}
+    .date-label{font-size:13px;font-weight:500;color:#fff;text-align:center;flex:1;text-transform:capitalize}
 
     /* NAV */
-    .nav-tabs { display:flex; background:var(--surface); border-bottom:1px solid var(--border); padding:0 .75rem; position:sticky; top:122px; z-index:19; overflow-x:auto; }
-    .nav-tabs::-webkit-scrollbar { display:none; }
-    .nav-tab { padding:11px 12px; font-size:13px; font-weight:500; cursor:pointer; color:var(--text2); border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; transition:all .15s; }
-    .nav-tab.active { color:var(--text); border-bottom-color:var(--accent); }
+    .nav-tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 .75rem;position:sticky;top:122px;z-index:19;overflow-x:auto}
+    .nav-tabs::-webkit-scrollbar{display:none}
+    .nav-tab{padding:11px 12px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .15s}
+    .nav-tab.active{color:var(--text);border-bottom-color:var(--accent)}
 
-    .content { padding:1rem; padding-bottom:5rem; }
+    .content{padding:1rem;padding-bottom:5rem}
 
     /* ROOM TABS */
-    .room-tabs { display:flex; gap:6px; margin-bottom:1rem; overflow-x:auto; padding-bottom:2px; }
-    .room-tabs::-webkit-scrollbar { display:none; }
-    .rtab { padding:7px 15px; border-radius:20px; border:1px solid var(--border2); background:var(--surface); font-size:13px; font-weight:500; cursor:pointer; color:var(--text2); white-space:nowrap; transition:all .15s; }
-    .rtab.active { color:#fff; border-color:transparent; }
+    .room-tabs{display:flex;gap:6px;margin-bottom:1rem;overflow-x:auto;padding-bottom:2px}
+    .room-tabs::-webkit-scrollbar{display:none}
+    .rtab{padding:7px 15px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);white-space:nowrap;transition:all .15s}
+    .rtab.active{color:#fff;border-color:transparent}
 
     /* SCHEDULE */
-    .srow { display:flex; align-items:stretch; gap:8px; margin-bottom:4px; min-height:40px; }
-    .tlbl { font-size:10px; color:var(--text3); width:38px; flex-shrink:0; padding-top:6px; text-align:right; font-weight:500; }
-    .slot { flex:1; border-radius:var(--rsm); border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; padding:8px 12px; cursor:pointer; transition:all .15s; font-size:12px; color:var(--text2); box-shadow:var(--shadow); }
-    .slot:hover { border-color:var(--border2); }
-    .slot .bname { font-weight:600; font-size:12px; }
-    .slot .btag  { font-size:10px; margin-left:auto; padding:2px 7px; border-radius:20px; font-weight:500; white-space:nowrap; }
-    .slot .fixed-tag { font-size:10px; margin-left:6px; opacity:.6; }
-    .slot .free-lbl { font-size:12px; color:var(--text3); }
-    .slot .plus-i   { margin-left:auto; font-size:20px; color:var(--text3); line-height:1; }
+    .srow{display:flex;align-items:stretch;gap:8px;margin-bottom:4px;min-height:42px}
+    .tlbl{font-size:10px;color:var(--text3);width:36px;flex-shrink:0;padding-top:8px;text-align:right;font-weight:500}
+    .slot{flex:1;border-radius:var(--rsm);border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;padding:8px 12px;cursor:pointer;transition:all .15s;font-size:12px;color:var(--text2);box-shadow:var(--shadow)}
+    .slot:hover{border-color:var(--border2)}
+    .bname{font-weight:600;font-size:12px}
+    .fixed-tag{font-size:10px;margin-left:6px;padding:2px 6px;border-radius:20px}
+    .btag{font-size:10px;margin-left:auto;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap}
+    .free-lbl{font-size:12px;color:var(--text3)}
+    .plus-i{margin-left:auto;font-size:18px;color:var(--text3);line-height:1}
 
     /* OVERVIEW */
-    .ov-room { margin-bottom:1.5rem; }
-    .ov-room-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-    .ov-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-    .ov-name { font-size:14px; font-weight:600; }
-    .ov-slots { display:flex; gap:4px; flex-wrap:wrap; }
-    .ov-slot { font-size:11px; font-weight:500; padding:4px 8px; border-radius:var(--rsm); border:1px solid var(--border); background:var(--surface); cursor:pointer; color:var(--text2); transition:all .15s; }
-    .ov-slot.ov-booked { color:#fff; border-color:transparent; }
+    .ov-room{margin-bottom:1.5rem}
+    .ov-room-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .ov-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+    .ov-name{font-size:14px;font-weight:600}
+    .ov-slots{display:flex;gap:4px;flex-wrap:wrap}
+    .ov-slot{font-size:11px;font-weight:500;padding:5px 9px;border-radius:var(--rsm);border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text2);transition:all .15s}
+    .ov-slot.booked{color:#fff;border-color:transparent}
 
     /* CALENDAR */
-    .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
-    .cal-header h2 { font-size:16px; font-weight:600; text-transform:capitalize; }
-    .cal-nav-btn { background:var(--surface); border:1px solid var(--border); border-radius:var(--rsm); padding:6px 12px; cursor:pointer; font-size:15px; color:var(--text2); }
-    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:1rem; }
-    .cal-weekday { text-align:center; font-size:10px; font-weight:600; color:var(--text3); padding:6px 0; text-transform:uppercase; letter-spacing:.5px; }
-    .cal-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:var(--rsm); cursor:pointer; font-size:13px; font-weight:500; color:var(--text2); position:relative; transition:all .15s; border:1px solid transparent; }
-    .cal-day:hover { background:var(--surface); border-color:var(--border); }
-    .cal-day.today { background:var(--accent); color:#fff; }
-    .cal-day.selected { background:var(--surface); border-color:var(--accent); color:var(--text); }
-    .cal-day.other-month { opacity:.35; }
-    .cal-day.has-bookings::after { content:''; position:absolute; bottom:4px; width:4px; height:4px; border-radius:50%; background:var(--accent); }
-    .cal-day.today.has-bookings::after { background:#fff; }
-    .cal-detail { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow); }
-    .cal-detail h3 { font-size:14px; font-weight:600; margin-bottom:.75rem; text-transform:capitalize; }
-    .cal-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); }
-    .cal-item:last-child { border-bottom:none; }
-    .cal-item-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-    .cal-item-time { font-size:12px; font-weight:600; }
-    .cal-item-room { font-size:11px; color:var(--text2); }
-    .cal-item-name { font-size:12px; color:var(--text2); margin-left:auto; }
-    .cal-empty { font-size:13px; color:var(--text3); text-align:center; padding:1.5rem 0; }
+    .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .cal-header h2{font-size:16px;font-weight:600;text-transform:capitalize}
+    .cal-nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);padding:6px 12px;cursor:pointer;font-size:15px;color:var(--text2)}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:1rem}
+    .cal-weekday{text-align:center;font-size:10px;font-weight:600;color:var(--text3);padding:6px 0;text-transform:uppercase;letter-spacing:.5px}
+    .cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--rsm);cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);position:relative;transition:all .15s;border:1px solid transparent}
+    .cal-day:hover{background:var(--surface);border-color:var(--border)}
+    .cal-day.today{background:var(--accent);color:#fff}
+    .cal-day.selected{background:var(--surface);border-color:var(--accent);color:var(--text)}
+    .cal-day.other-month{opacity:.35}
+    .cal-day.has-bookings::after{content:'';position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+    .cal-day.today.has-bookings::after{background:#fff}
+    .cal-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow)}
+    .cal-detail h3{font-size:14px;font-weight:600;margin-bottom:.75rem;text-transform:capitalize}
+    .cal-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .cal-item:last-child{border-bottom:none}
+    .cal-item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .cal-item-time{font-size:12px;font-weight:600}
+    .cal-item-room{font-size:11px;color:var(--text2)}
+    .cal-item-name{font-size:12px;color:var(--text2);margin-left:auto}
+    .cal-empty{font-size:13px;color:var(--text3);text-align:center;padding:1.5rem 0}
 
     /* SETTINGS */
-    .settings-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; z-index:200; }
-    .settings-overlay.open { display:block; }
-    .settings-panel { position:fixed; top:0; right:0; bottom:0; width:min(360px,100vw); background:var(--bg); z-index:201; overflow-y:auto; padding:2.5rem 1.25rem 4rem; transform:translateX(100%); transition:transform .25s ease; box-shadow:-4px 0 24px rgba(0,0,0,.12); }
-    .settings-panel.open { transform:translateX(0); }
-    .settings-panel-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
-    .settings-panel-hdr h2 { font-size:18px; font-weight:600; }
-    .close-btn { background:var(--surface2); border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
-    .room-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem; margin-bottom:.75rem; box-shadow:var(--shadow); }
-    .room-card-hdr { display:flex; align-items:center; gap:10px; margin-bottom:1rem; }
-    .room-card-hdr .dot { width:16px; height:16px; border-radius:50%; flex-shrink:0; }
-    .field-label { font-size:12px; font-weight:500; color:var(--text2); display:block; margin-bottom:5px; }
-    .field-input { width:100%; padding:10px 12px; border:1px solid var(--border2); border-radius:var(--rsm); font-size:14px; font-family:inherit; color:var(--text); background:var(--bg); margin-bottom:1rem; outline:none; transition:border-color .15s; }
-    .field-input:focus { border-color:var(--accent); }
-    .color-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:1rem; }
-    .cpick { width:26px; height:26px; border-radius:50%; cursor:pointer; border:3px solid transparent; outline:2px solid transparent; transition:all .15s; }
-    .cpick.selected { outline:2px solid var(--accent); outline-offset:2px; }
-    .card-actions { display:flex; gap:8px; }
-    .btn { flex:1; padding:10px; font-size:13px; font-weight:500; font-family:inherit; border-radius:var(--rsm); cursor:pointer; border:1px solid var(--border2); background:var(--surface); color:var(--text); transition:all .15s; }
-    .btn:hover { background:var(--surface2); }
-    .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
-    .btn-primary:hover { opacity:.88; }
-    .btn-danger { color:#a32d2d; border-color:#f0b0b0; }
-    .btn-danger:hover { background:#fff0f0; }
-    .add-room-btn { width:100%; padding:12px; font-size:14px; font-weight:500; font-family:inherit; border-radius:var(--radius); cursor:pointer; border:1.5px dashed var(--border2); background:transparent; color:var(--text2); transition:all .15s; margin-top:4px; }
-    .add-room-btn:hover { background:var(--surface); }
+    .settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:200}
+    .settings-overlay.open{display:block}
+    .settings-panel{position:fixed;top:0;right:0;bottom:0;width:min(360px,100vw);background:var(--bg);z-index:201;overflow-y:auto;padding:2.5rem 1.25rem 4rem;transform:translateX(100%);transition:transform .25s ease;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+    .settings-panel.open{transform:translateX(0)}
+    .settings-panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+    .settings-panel-hdr h2{font-size:18px;font-weight:600}
+    .close-btn{background:var(--surface2);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+    .room-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:.75rem;box-shadow:var(--shadow)}
+    .room-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+    .room-card-hdr .dot{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+    .field-label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:5px}
+    .field-input{width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--rsm);font-size:14px;font-family:inherit;color:var(--text);background:var(--bg);margin-bottom:1rem;outline:none;transition:border-color .15s}
+    .field-input:focus{border-color:var(--accent)}
+    .color-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+    .cpick{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;outline:2px solid transparent;transition:all .15s}
+    .cpick.selected{outline:2px solid var(--accent);outline-offset:2px}
+    .card-actions{display:flex;gap:8px}
+    .btn{flex:1;padding:10px;font-size:13px;font-weight:500;font-family:inherit;border-radius:var(--rsm);cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);transition:all .15s}
+    .btn:hover{background:var(--surface2)}
+    .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .btn-primary:hover{opacity:.88}
+    .btn-danger{color:#a32d2d;border-color:#f0b0b0}
+    .btn-danger:hover{background:#fff0f0}
+    .add-room-btn{width:100%;padding:12px;font-size:14px;font-weight:500;font-family:inherit;border-radius:var(--radius);cursor:pointer;border:1.5px dashed var(--border2);background:transparent;color:var(--text2);transition:all .15s;margin-top:4px}
+    .add-room-btn:hover{background:var(--surface)}
 
-    /* MODAL */
-    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:flex-end; justify-content:center; z-index:100; padding:1rem; }
-    .modal-overlay.open { display:flex; }
-    .modal { background:var(--surface); border-radius:var(--radius) var(--radius) var(--rsm) var(--rsm); padding:1.5rem; width:100%; max-width:400px; border:1px solid var(--border); animation:slideUp .2s ease; }
-    @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
-    .modal h2 { font-size:16px; font-weight:600; margin-bottom:4px; }
-    .modal-sub { font-size:13px; color:var(--text2); margin-bottom:1.25rem; }
-    .modal-actions { display:flex; gap:8px; margin-top:.25rem; }
-    .modal-actions .btn { padding:12px; font-size:14px; }
-    .error-msg { font-size:12px; color:#a32d2d; margin-top:-10px; margin-bottom:10px; display:none; }
-    .error-msg.show { display:block; }
-    .dur-row { display:flex; gap:8px; margin-bottom:1rem; }
-    .dur-btn { flex:1; padding:10px; font-size:13px; font-weight:500; font-family:inherit; border-radius:var(--rsm); cursor:pointer; border:1px solid var(--border2); background:var(--surface); color:var(--text2); transition:all .15s; }
-    .dur-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
-    /* multi-slot: aula de 1h30 ocupa slot principal + meia linha abaixo */
-    .slot.half-top    { border-radius:var(--rsm) var(--rsm) 0 0; border-bottom:none; margin-bottom:0; }
-    .slot.half-bottom { border-radius:0 0 var(--rsm) var(--rsm); border-top:1px dashed rgba(0,0,0,.1); min-height:20px; padding:4px 12px; font-size:10px; opacity:.75; cursor:pointer; margin-bottom:4px; }
+    /* MODALS */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:100;padding:1rem}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--surface);border-radius:var(--radius) var(--radius) var(--rsm) var(--rsm);padding:1.5rem;width:100%;max-width:400px;border:1px solid var(--border);animation:slideUp .2s ease}
+    @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .modal h2{font-size:16px;font-weight:600;margin-bottom:4px}
+    .modal-sub{font-size:13px;color:var(--text2);margin-bottom:1.25rem}
+    .dur-row{display:flex;gap:8px;margin-bottom:1rem}
+    .dur-btn{flex:1;padding:10px;font-size:13px;font-weight:500;font-family:inherit;border-radius:var(--rsm);cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text2);transition:all .15s}
+    .dur-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .dur-btn:disabled{opacity:.3;cursor:not-allowed}
+    .modal-actions{display:flex;gap:8px;margin-top:.25rem}
+    .modal-actions .btn{padding:12px;font-size:14px}
+    .error-msg{font-size:12px;color:#a32d2d;margin-bottom:10px;display:none}
+    .error-msg.show{display:block}
 
     /* LOADING */
-    #loading { position:fixed; inset:0; background:var(--accent); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; gap:1rem; }
-    .logo-load { font-size:28px; font-weight:600; letter-spacing:2px; color:#fff; }
-    .sub-load  { font-size:12px; color:rgba(255,255,255,.4); letter-spacing:1px; }
-    .spinner { width:28px; height:28px; border:2px solid rgba(255,255,255,.2); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
-    @keyframes spin { to{transform:rotate(360deg)} }
+    #loading{position:fixed;inset:0;background:var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:1rem}
+    .logo-load{font-size:28px;font-weight:600;letter-spacing:2px;color:#fff}
+    .sub-load{font-size:12px;color:rgba(255,255,255,.4);letter-spacing:1px}
+    .spinner{width:28px;height:28px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
     /* TOAST */
-    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--accent); color:#fff; padding:11px 20px; border-radius:20px; font-size:13px; font-weight:500; z-index:300; white-space:nowrap; transition:transform .3s ease; box-shadow:0 4px 16px rgba(0,0,0,.2); }
-    .toast.show { transform:translateX(-50%) translateY(0); }
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--accent);color:#fff;padding:11px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:300;white-space:nowrap;transition:transform .3s ease;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+    .toast.show{transform:translateX(-50%) translateY(0)}
   </style>
 </head>
 <body>
@@ -191,7 +186,7 @@
         <button class="settings-btn" onclick="openSettings()">⚙️</button>
       </div>
     </div>
-    <div class="date-nav" id="date-nav-bar">
+    <div class="date-nav">
       <button onclick="changeDate(-1)">‹</button>
       <span class="date-label" id="date-label"></span>
       <button onclick="changeDate(1)">›</button>
@@ -216,13 +211,13 @@
   <div class="modal">
     <h2 id="book-title"></h2>
     <p class="modal-sub" id="book-sub"></p>
-    <label class="field-label">Seu nome (professor)</label>
+    <label class="field-label">Nome (professor)</label>
     <input class="field-input" type="text" id="prof-name" placeholder="Ex: Ana Silva" maxlength="40"/>
-    <label class="field-label">Duração da aula</label>
-    <div class="dur-row" id="dur-row">
-      <button class="dur-btn" data-dur="30"  onclick="selectDur(this)">30 min</button>
-      <button class="dur-btn" data-dur="60"  onclick="selectDur(this)">1 hora</button>
-      <button class="dur-btn" data-dur="90"  onclick="selectDur(this)">1h30</button>
+    <label class="field-label">Duração</label>
+    <div class="dur-row">
+      <button class="dur-btn" data-dur="30" onclick="selectDur(this)">30 min</button>
+      <button class="dur-btn" data-dur="60" onclick="selectDur(this)">1 hora</button>
+      <button class="dur-btn" data-dur="90" onclick="selectDur(this)">1h30</button>
     </div>
     <p class="error-msg" id="dur-error"></p>
     <div class="modal-actions">
@@ -232,14 +227,14 @@
   </div>
 </div>
 
-<!-- Modal: Cancelar (pede senha) -->
+<!-- Modal: Cancelar -->
 <div class="modal-overlay" id="modal-cancel">
   <div class="modal">
     <h2 id="cancel-title"></h2>
     <p class="modal-sub" id="cancel-sub"></p>
     <label class="field-label">Senha de administrador</label>
-    <input class="field-input" type="password" id="admin-pwd" placeholder="Digite a senha"/>
-    <p class="error-msg" id="pwd-error">Senha incorreta. Tente novamente.</p>
+    <input class="field-input" type="password" id="admin-pwd" placeholder="Senha"/>
+    <p class="error-msg" id="pwd-error">Senha incorreta.</p>
     <div class="modal-actions">
       <button class="btn" onclick="closeCancelModal()">Fechar</button>
       <button class="btn btn-danger" onclick="confirmCancel()">Cancelar reserva</button>
@@ -260,853 +255,604 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-//  ██████╗ ██████╗ ███╗   ██╗███████╗██╗ ██████╗ 
-// ██╔════╝██╔═══██╗████╗  ██║██╔════╝██║██╔════╝ 
-// ██║     ██║   ██║██╔██╗ ██║█████╗  ██║██║  ███╗
-// ██║     ██║   ██║██║╚██╗██║██╔══╝  ██║██║   ██║
-// ╚██████╗╚██████╔╝██║ ╚████║██║     ██║╚██████╔╝
-//  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝     ╚═╝ ╚═════╝ 
-// ═══════════════════════════════════════════════════════════
-
-// ───────────────────────────────────────────────────────────
-// 🔒 SENHA DO ADMINISTRADOR
-// Para trocar a senha, altere apenas o valor abaixo:
-// ───────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════
+// CONFIGURAÇÕES
+// ═══════════════════════════════════════════════
 const ADMIN_PASSWORD = "24";
-
-// ───────────────────────────────────────────────────────────
-// 📋 AULAS FIXAS / REGULARES
-// Formato de cada linha:
-//   { dias, sala, professor, inicio, fim }
-//
-// dias: array com dias da semana
-//   0=Domingo, 1=Segunda, 2=Terça, 3=Quarta,
-//   4=Quinta,  5=Sexta,  6=Sábado
-//
-// inicio e fim: no formato "HH:MM"
-//   Exemplos: "08:00", "09:30", "21:00"
-//
-// sala: deve ser exatamente o ID da sala
-//   (venus, lunar, galaxia — ou o id que você criou)
-//
-// EXEMPLO:
-// Toda segunda e quarta, sala Galáxia, prof Mari Souza, 21h–22h:
-//   { dias:[1,3], sala:"galaxia", professor:"Mari Souza", inicio:"21:00", fim:"22:00" }
-// ───────────────────────────────────────────────────────────
-const AULAS_FIXAS = [
-  // ↓↓ Adicione ou edite as aulas fixas aqui ↓↓
-  { dias:[1,3], sala:"lunar",   professor:"Diego Alcântara", inicio:"21:00", fim:"22:00" },
-  { dias:[1,3], sala:"lunar",   professor:"Mari Mosson",     inicio:"19:00", fim:"20:00" },
-  { dias:[1,3], sala:"venus",   professor:"Jé Zeni",         inicio:"18:00", fim:"19:00" },
-  { dias:[1,3], sala:"venus",   professor:"Karine",          inicio:"19:00", fim:"20:00" },
-  { dias:[1,3], sala:"venus",   professor:"Iago",            inicio:"20:00", fim:"21:00" },
-  { dias:[1,3], sala:"venus",   professor:"Isys Caldas",     inicio:"21:00", fim:"22:30" },
-  { dias:[1,3], sala:"galaxia", professor:"Mari Mosson",     inicio:"08:00", fim:"09:00" },
-  { dias:[1,3], sala:"galaxia", professor:"Mari Mosson",     inicio:"09:00", fim:"10:00" },
-  { dias:[1,3], sala:"galaxia", professor:"Mari Mosson",     inicio:"12:30", fim:"13:30" },
-  { dias:[1,3], sala:"galaxia", professor:"Babi Stemp",      inicio:"17:00", fim:"18:00" },
-  { dias:[1,3], sala:"galaxia", professor:"Babi Stemp",      inicio:"18:00", fim:"19:00" },
-  { dias:[1,3], sala:"galaxia", professor:"Mari Souza",      inicio:"19:00", fim:"20:00" },
-  { dias:[1,3], sala:"galaxia", professor:"Mari Souza",      inicio:"20:00", fim:"21:00" },
-  { dias:[1,3], sala:"galaxia", professor:"Mari Souza",      inicio:"21:00", fim:"22:00" },
-  { dias:[2,4], sala:"galaxia", professor:"Mari Souza",      inicio:"07:30", fim:"08:30" },
-  { dias:[2,4], sala:"galaxia", professor:"Mari Souza",      inicio:"08:30", fim:"09:30" },
-  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"16:30", fim:"17:30" },
-  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"17:30", fim:"18:30" },
-  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"19:30", fim:"20:30" },
-  { dias:[2,4], sala:"galaxia", professor:"Mari Mosson",     inicio:"20:30", fim:"21:30" },
-  { dias:[2],   sala:"galaxia", professor:"Mari Souza",      inicio:"18:30", fim:"19:30" },
-  { dias:[4],   sala:"galaxia", professor:"Mari Mosson",     inicio:"18:30", fim:"19:30" },
-  { dias:[2],   sala:"lunar",   professor:"Mari Souza",      inicio:"20:30", fim:"21:30" },
-  { dias:[4],   sala:"venus",   professor:"Isys Caldas",     inicio:"07:30", fim:"08:30" },
-  { dias:[2,4], sala:"venus",   professor:"Jé Zeni",         inicio:"18:30", fim:"19:30" },
-  { dias:[2,4], sala:"venus",   professor:"Jé Zeni",         inicio:"19:30", fim:"20:30" },
-  { dias:[2,4], sala:"venus",   professor:"Babi Stemp",      inicio:"20:30", fim:"21:30" },
-  { dias:[5],   sala:"venus",   professor:"Chrystyam",       inicio:"20:00", fim:"21:00" },
-  { dias:[5],   sala:"galaxia", professor:"Mari Souza",      inicio:"18:00", fim:"19:00" },
-  { dias:[5],   sala:"galaxia", professor:"Mari Souza",      inicio:"19:00", fim:"20:00" },
-  { dias:[5],   sala:"galaxia", professor:"Jé Zeni",         inicio:"20:30", fim:"21:30" },
-  { dias:[6],   sala:"galaxia", professor:"Babi Stemp",      inicio:"09:30", fim:"10:30" },
-  { dias:[6],   sala:"galaxia", professor:"Babi Stemp",      inicio:"10:30", fim:"11:30" },
-  { dias:[6],   sala:"galaxia", professor:"Jé Zeni",         inicio:"12:30", fim:"13:30" },
-  { dias:[6],   sala:"galaxia", professor:"Jé Zeni",         inicio:"13:30", fim:"14:30" },
-  { dias:[6],   sala:"galaxia", professor:"Jé Zeni",         inicio:"14:30", fim:"15:30" },
-  // ↑↑ Adicione ou edite as aulas fixas aqui ↑↑
-];
-
-// ═══════════════════════════════════════════════════════════
-// CONSTANTES
-// ═══════════════════════════════════════════════════════════
-// Slots de 1h em 1h, das 06:00 às 21:00
-// ═══════════════════════════════════════════════════════════
-// SISTEMA DE TIMELINE DINÂMICA
-// ─────────────────────────────────────────────────────────
-// A grade não é mais uma lista fixa de horas cheias.
-// Ela é construída a partir dos blocos reais de ocupação,
-// inserindo slots livres nos intervalos corretos.
-//
-// Regras:
-//  - Aula de 1h  → ocupa um bloco de 60min
-//  - Aula de 1h30 → ocupa um bloco de 90min
-//  - Os slots disponíveis têm duração do espaço livre até o
-//    próximo bloco ocupado (pode ser 30min, 1h, 1h30, etc.)
-// ═══════════════════════════════════════════════════════════
-
-const DAY_START = 7 * 60;    // 07:00 em minutos
-const DAY_END   = 22 * 60 + 30;  // 22:30 em minutos
-
-function minToSlot(m) {
-  return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
-}
-function slotToMin(s) {
-  const [h,m] = s.split(':').map(Number); return h*60+m;
-}
-
-// Retorna todos os blocos ocupados de uma sala num dia (fixos + manuais),
-// ordenados por início, sem sobreposição
-function getOccupiedBlocks(roomId, ds) {
-  const blocks = [];
-
-  // Aulas fixas
-  const dow = new Date(ds + 'T12:00:00').getDay();
-  for (const a of AULAS_FIXAS) {
-    if (a.sala !== roomId) continue;
-    if (!a.dias.includes(dow)) continue;
-    const start = slotToMin(a.inicio);
-    const end   = slotToMin(a.fim);
-    if (isNaN(start) || isNaN(end) || end <= start) continue;
-    blocks.push({ start, end, name: a.professor, fixed: true, slotKey: a.inicio });
-  }
-
-  // Reservas manuais (no Firebase)
-  for (const [key, val] of Object.entries(bookings)) {
-    if (!val || typeof val !== 'string') continue;
-    if (!key.startsWith(roomId + '__' + ds + '__')) continue;
-    const slotPart = key.split('__')[2].replace('-',':');
-    const start    = slotToMin(slotPart);
-    if (isNaN(start)) continue;
-    // Duração declarada
-    let dur = val.includes('|1h30|') ? 90 : val.includes('|30min|') ? 30 : 60;
-    // Segurança: se a duração declarada colidir com aula fixa, reduz para caber
-    const fixedBlocks = blocks.filter(b => b.fixed);
-    for (const fb of fixedBlocks) {
-      if (fb.start >= start && fb.start < start + dur) {
-        dur = fb.start - start; // reduz até o início da aula fixa
-      }
-    }
-    if (dur <= 0) continue; // descarta se não tem espaço
-    const end  = start + dur;
-    const name = val.replace(' |1h30|','').replace(' |30min|','').trim();
-    blocks.push({ start, end, name, fixed: false, raw: val, slotKey: slotPart });
-  }
-
-  blocks.sort((a,b) => a.start - b.start);
-  return blocks;
-}
-
-// Constrói a lista de itens da timeline para uma sala + dia
-// Cada item: { type:'booked'|'free', start, end, ...dadosDoBloco }
-function buildTimeline(roomId, ds) {
-  const blocks  = getOccupiedBlocks(roomId, ds);
-  const items   = [];
-  let cursor    = DAY_START;
-
-  for (const b of blocks) {
-    if (b.start < DAY_START || b.start >= DAY_END) continue;
-    if (b.start > cursor) {
-      // Espaço livre antes deste bloco
-      items.push({ type:'free', start:cursor, end:b.start });
-    }
-    if (b.start >= cursor) {
-      items.push({ type:'booked', ...b });
-      cursor = b.end;
-    }
-  }
-
-  if (cursor < DAY_END) {
-    items.push({ type:'free', start:cursor, end:DAY_END });
-  }
-
-  return items;
-}
-
-// Formata duração em minutos para exibição
-function durLabel(min) {
-  if (min === 60)  return '1h';
-  if (min === 90)  return '1h30';
-  if (min === 30)  return '30min';
-  if (min < 60)    return min + 'min';
-  return Math.floor(min/60) + 'h' + (min%60 ? (min%60)+'min' : '');
-}
+const DAY_START = 7 * 60;      // 07:00
+const DAY_END   = 22 * 60 + 30; // 22:30
 
 const COLOR_OPTIONS = [
-  { hex:'#7F77DD', light:'#EEEDFE', text:'#3C3489', label:'Roxo'        },
-  { hex:'#1D9E75', light:'#E1F5EE', text:'#085041', label:'Verde'       },
-  { hex:'#EF9F27', light:'#FAEEDA', text:'#633806', label:'Âmbar'       },
-  { hex:'#D85A30', light:'#FAECE7', text:'#4A1B0C', label:'Coral'       },
-  { hex:'#D4537E', light:'#FBEAF0', text:'#4B1528', label:'Rosa'        },
-  { hex:'#378ADD', light:'#E6F1FB', text:'#042C53', label:'Azul'        },
-  { hex:'#639922', light:'#EAF3DE', text:'#173404', label:'Verde-limão' },
-  { hex:'#888780', light:'#F1EFE8', text:'#2C2C2A', label:'Cinza'       },
+  {hex:'#7F77DD',light:'#EEEDFE',text:'#3C3489',label:'Roxo'},
+  {hex:'#1D9E75',light:'#E1F5EE',text:'#085041',label:'Verde'},
+  {hex:'#EF9F27',light:'#FAEEDA',text:'#633806',label:'Âmbar'},
+  {hex:'#D85A30',light:'#FAECE7',text:'#4A1B0C',label:'Coral'},
+  {hex:'#D4537E',light:'#FBEAF0',text:'#4B1528',label:'Rosa'},
+  {hex:'#378ADD',light:'#E6F1FB',text:'#042C53',label:'Azul'},
+  {hex:'#639922',light:'#EAF3DE',text:'#173404',label:'Verde-limão'},
+  {hex:'#888780',light:'#F1EFE8',text:'#2C2C2A',label:'Cinza'},
 ];
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+// AULAS FIXAS
+// dias: 0=Dom 1=Seg 2=Ter 3=Qua 4=Qui 5=Sex 6=Sáb
+// ═══════════════════════════════════════════════
+const AULAS_FIXAS = [
+  {dias:[1,3],sala:"lunar",   professor:"Diego Alcântara",inicio:"21:00",fim:"22:00"},
+  {dias:[1,3],sala:"lunar",   professor:"Mari Mosson",    inicio:"19:00",fim:"20:00"},
+  {dias:[1,3],sala:"venus",   professor:"Jé Zeni",        inicio:"18:00",fim:"19:00"},
+  {dias:[1,3],sala:"venus",   professor:"Karine",         inicio:"19:00",fim:"20:00"},
+  {dias:[1,3],sala:"venus",   professor:"Iago",           inicio:"20:00",fim:"21:00"},
+  {dias:[1,3],sala:"venus",   professor:"Isys Caldas",    inicio:"21:00",fim:"22:30"},
+  {dias:[1,3],sala:"galaxia", professor:"Mari Mosson",    inicio:"08:00",fim:"09:00"},
+  {dias:[1,3],sala:"galaxia", professor:"Mari Mosson",    inicio:"09:00",fim:"10:00"},
+  {dias:[1,3],sala:"galaxia", professor:"Mari Mosson",    inicio:"12:30",fim:"13:30"},
+  {dias:[1,3],sala:"galaxia", professor:"Babi Stemp",     inicio:"17:00",fim:"18:00"},
+  {dias:[1,3],sala:"galaxia", professor:"Babi Stemp",     inicio:"18:00",fim:"19:00"},
+  {dias:[1,3],sala:"galaxia", professor:"Mari Souza",     inicio:"19:00",fim:"20:00"},
+  {dias:[1,3],sala:"galaxia", professor:"Mari Souza",     inicio:"20:00",fim:"21:00"},
+  {dias:[1,3],sala:"galaxia", professor:"Mari Souza",     inicio:"21:00",fim:"22:00"},
+  {dias:[2,4],sala:"galaxia", professor:"Mari Souza",     inicio:"07:30",fim:"08:30"},
+  {dias:[2,4],sala:"galaxia", professor:"Mari Souza",     inicio:"08:30",fim:"09:30"},
+  {dias:[2,4],sala:"galaxia", professor:"Mari Mosson",    inicio:"16:30",fim:"17:30"},
+  {dias:[2,4],sala:"galaxia", professor:"Mari Mosson",    inicio:"17:30",fim:"18:30"},
+  {dias:[2,4],sala:"galaxia", professor:"Mari Mosson",    inicio:"19:30",fim:"20:30"},
+  {dias:[2,4],sala:"galaxia", professor:"Mari Mosson",    inicio:"20:30",fim:"21:30"},
+  {dias:[2],  sala:"galaxia", professor:"Mari Souza",     inicio:"18:30",fim:"19:30"},
+  {dias:[4],  sala:"galaxia", professor:"Mari Mosson",    inicio:"18:30",fim:"19:30"},
+  {dias:[2],  sala:"lunar",   professor:"Mari Souza",     inicio:"20:30",fim:"21:30"},
+  {dias:[4],  sala:"venus",   professor:"Isys Caldas",    inicio:"07:30",fim:"08:30"},
+  {dias:[2,4],sala:"venus",   professor:"Jé Zeni",        inicio:"18:30",fim:"19:30"},
+  {dias:[2,4],sala:"venus",   professor:"Jé Zeni",        inicio:"19:30",fim:"20:30"},
+  {dias:[2,4],sala:"venus",   professor:"Babi Stemp",     inicio:"20:30",fim:"21:30"},
+  {dias:[5],  sala:"venus",   professor:"Chrystyam",      inicio:"20:00",fim:"21:00"},
+  {dias:[5],  sala:"galaxia", professor:"Mari Souza",     inicio:"18:00",fim:"19:00"},
+  {dias:[5],  sala:"galaxia", professor:"Mari Souza",     inicio:"19:00",fim:"20:00"},
+  {dias:[5],  sala:"galaxia", professor:"Jé Zeni",        inicio:"20:30",fim:"21:30"},
+  {dias:[6],  sala:"galaxia", professor:"Babi Stemp",     inicio:"09:30",fim:"10:30"},
+  {dias:[6],  sala:"galaxia", professor:"Babi Stemp",     inicio:"10:30",fim:"11:30"},
+  {dias:[6],  sala:"galaxia", professor:"Jé Zeni",        inicio:"12:30",fim:"13:30"},
+  {dias:[6],  sala:"galaxia", professor:"Jé Zeni",        inicio:"13:30",fim:"14:30"},
+  {dias:[6],  sala:"galaxia", professor:"Jé Zeni",        inicio:"14:30",fim:"15:30"},
+];
+
+// ═══════════════════════════════════════════════
 // ESTADO
-// ═══════════════════════════════════════════════════════════
-let rooms = JSON.parse(localStorage.getItem('grav_rooms') || 'null') || [
-  { id:'venus',   name:'Vênus',   icon:'♀',  color: COLOR_OPTIONS[0] },
-  { id:'lunar',   name:'Lunar',   icon:'☾',  color: COLOR_OPTIONS[1] },
-  { id:'galaxia', name:'Galáxia', icon:'🌌', color: COLOR_OPTIONS[2] },
+// ═══════════════════════════════════════════════
+let rooms = JSON.parse(localStorage.getItem('grav_rooms')||'null') || [
+  {id:'venus',  name:'Vênus',  icon:'♀', color:COLOR_OPTIONS[0]},
+  {id:'lunar',  name:'Lunar',  icon:'☾', color:COLOR_OPTIONS[1]},
+  {id:'galaxia',name:'Galáxia',icon:'🌌',color:COLOR_OPTIONS[2]},
 ];
-let bookings       = {};
-let currentRoom    = rooms[0]?.id || '';
-let dateOffset     = 0;
-let currentView    = 'single';
-let calMonth       = new Date();
-let selectedCalDay = null;
-let pendingSlot    = null;
-let cancelSlot     = null;
-let fbReady        = false;
-let FB             = {};
+let bookings     = {};
+let currentRoom  = rooms[0]?.id || '';
+let dateOffset   = 0;
+let currentView  = 'single';
+let calMonth     = new Date();
+let selCalDay    = null;
+let pendingSlot  = null;
+let cancelSlot   = null;
+let fbReady      = false;
+let FB           = {};
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // FIREBASE
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 window.addEventListener('firebase-ready', () => {
   FB = window._fb;
   fbReady = true;
-
-  // Escuta reservas em tempo real
-  FB.onValue(FB.ref(FB.db, 'bookings'), snap => {
+  FB.onValue(FB.ref(FB.db,'bookings'), snap => {
     bookings = snap.val() || {};
     badge('ok');
-    hide('loading'); show('main-app');
+    document.getElementById('loading').style.display='none';
+    document.getElementById('main-app').style.display='block';
     refresh();
-  }, () => { badge('err'); hide('loading'); show('main-app'); });
-
-  // Escuta salas
-  FB.onValue(FB.ref(FB.db, 'rooms'), snap => {
-    if (snap.val()) { rooms = snap.val(); localStorage.setItem('grav_rooms', JSON.stringify(rooms)); refresh(); }
+  }, () => {
+    badge('err');
+    document.getElementById('loading').style.display='none';
+    document.getElementById('main-app').style.display='block';
+  });
+  FB.onValue(FB.ref(FB.db,'rooms'), snap => {
+    if(snap.val()){rooms=snap.val();localStorage.setItem('grav_rooms',JSON.stringify(rooms));refresh();}
   });
 });
-
-// Fallback offline
-setTimeout(() => {
-  if (document.getElementById('loading').style.display !== 'none') {
-    hide('loading'); show('main-app'); badge('err'); renderSingle();
+setTimeout(()=>{
+  if(document.getElementById('loading').style.display!=='none'){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('main-app').style.display='block';
+    badge('err'); refresh();
   }
-}, 5000);
-
-function badge(s) {
-  const b = document.getElementById('sync-badge');
-  const labels = { ok:'ao vivo', err:'sem conexão', wait:'conectando' };
-  b.className = 'sync-badge ' + s;
-  b.innerHTML = `<span class="sync-dot"></span> ${labels[s]}`;
+},5000);
+function badge(s){
+  const b=document.getElementById('sync-badge');
+  b.className='sync-badge '+s;
+  b.innerHTML=`<span class="sync-dot"></span> ${s==='ok'?'ao vivo':s==='err'?'sem conexão':'conectando'}`;
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // UTILITÁRIOS
-// ═══════════════════════════════════════════════════════════
-function hide(id) { document.getElementById(id).style.display = 'none'; }
-function show(id) { document.getElementById(id).style.display = 'block'; }
-
-function todayPlus(off) {
-  const d = new Date(); d.setDate(d.getDate() + off); return d;
+// ═══════════════════════════════════════════════
+function s2m(s){const[h,m]=s.split(':').map(Number);return h*60+m;}
+function m2s(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function durLbl(m){return m===30?'30min':m===60?'1h':m===90?'1h30':m+'min';}
+function todayPlus(off){const d=new Date();d.setDate(d.getDate()+off);return d;}
+function ds(off){return todayPlus(off).toISOString().slice(0,10);}
+function dsOf(d){return d.toISOString().slice(0,10);}
+function fmtDate(off){
+  const d=todayPlus(off);
+  const s=d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  return off===0?'Hoje · '+s:off===1?'Amanhã · '+s:s;
 }
-function dateStr(off) { return todayPlus(off).toISOString().slice(0,10); }
-function dateStrOf(d) { return d.toISOString().slice(0,10); }
+function fmtDateStr(ds){
+  const d=new Date(ds+'T12:00:00');
+  return d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+}
+function getRoom(id){return rooms.find(r=>r.id===id);}
+function fbKey(rid,day,slot){return rid+'__'+day+'__'+slot.replace(':','-');}
 
-function formatDate(off) {
-  const d = todayPlus(off);
-  const s = d.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
-  return off===0 ? 'Hoje · '+s : off===1 ? 'Amanhã · '+s : s;
+// ═══════════════════════════════════════════════
+// BLOCOS — núcleo da lógica
+// ═══════════════════════════════════════════════
+function getBlocks(roomId, day) {
+  // 1) Carrega aulas fixas
+  const fixed = [];
+  const dow = new Date(day+'T12:00:00').getDay();
+  for(const a of AULAS_FIXAS){
+    if(a.sala!==roomId || !a.dias.includes(dow)) continue;
+    const start=s2m(a.inicio), end=s2m(a.fim);
+    if(isNaN(start)||isNaN(end)||end<=start) continue;
+    fixed.push({start,end,name:a.professor,fixed:true,slotKey:a.inicio});
+  }
+  // 2) Carrega reservas manuais, cortando se colidir com fixa
+  const manual = [];
+  for(const[key,val] of Object.entries(bookings)){
+    if(!val||typeof val!=='string') continue;
+    if(!key.startsWith(roomId+'__'+day+'__')) continue;
+    const slotPart = key.split('__')[2].replace('-',':');
+    const start = s2m(slotPart);
+    if(isNaN(start)) continue;
+    let dur = val.includes('|1h30|')?90 : val.includes('|30min|')?30 : 60;
+    for(const f of fixed){
+      if(f.start>start && f.start<start+dur) dur=f.start-start;
+    }
+    if(dur<=0) continue;
+    const name = val.replace(/ \|1h30\|/,'').replace(/ \|30min\|/,'').trim();
+    manual.push({start,end:start+dur,name,fixed:false,slotKey:slotPart});
+  }
+  return [...fixed,...manual].sort((a,b)=>a.start-b.start);
 }
 
-function getRoom(id) { return rooms.find(r => r.id === id); }
-
-// Chave do Firebase: roomId__YYYY-MM-DD__HH-MM
-function fbKey(roomId, ds, slot) {
-  return roomId + '__' + ds + '__' + slot.replace(':','-');
+function freeFrom(roomId, day, startMin){
+  const blocks = getBlocks(roomId,day);
+  const next = blocks.filter(b=>b.start>startMin).sort((a,b)=>a.start-b.start)[0];
+  return (next?next.start:DAY_END) - startMin;
 }
 
-// Verifica se um horário (em minutos) está ocupado numa sala+dia
-function isOccupied(roomId, ds, startMin, endMin) {
-  const blocks = getOccupiedBlocks(roomId, ds);
-  return blocks.some(b => startMin < b.end && endMin > b.start);
+function isOccupied(roomId, day, s, e){
+  return getBlocks(roomId,day).some(b=>s<b.end && e>b.start);
 }
 
-// Retorna o bloco que ocupa exatamente startMin (para cancelar)
-function getBlockAt(roomId, ds, startMin) {
-  const blocks = getOccupiedBlocks(roomId, ds);
-  return blocks.find(b => b.start === startMin) || null;
+// ═══════════════════════════════════════════════
+// FIREBASE WRITE
+// ═══════════════════════════════════════════════
+function writeSlot(roomId,day,slot,val){
+  const k=fbKey(roomId,day,slot);
+  bookings[k]=val;
+  if(fbReady) FB.set(FB.ref(FB.db,'bookings/'+k),val);
+  refresh();
 }
-
-// Chave do Firebase para um slot (mantém compatibilidade)
-function getSlot(roomId, ds, slot) {
-  return bookings[fbKey(roomId, ds, slot)] || null;
-}
-function getHalfSlot(roomId, ds, halfSlot) {
-  return bookings[fbKey(roomId, ds, halfSlot)] || null;
-}
-
-// ═══════════════════════════════════════════════════════════
-// ESCREVER / DELETAR NO FIREBASE
-// ═══════════════════════════════════════════════════════════
-function writeSlot(roomId, ds, slot, name) {
-  const k = fbKey(roomId, ds, slot);
-  if (!fbReady) { bookings[k] = name; refresh(); return; }
-  FB.set(FB.ref(FB.db, 'bookings/' + k), name);
-}
-function deleteSlot(roomId, ds, slot) {
-  const k = fbKey(roomId, ds, slot);
+function deleteSlot(roomId,day,slot){
+  const k=fbKey(roomId,day,slot);
   delete bookings[k];
-  if (!fbReady) { refresh(); return; }
-  FB.remove(FB.ref(FB.db, 'bookings/' + k));
+  if(fbReady) FB.remove(FB.ref(FB.db,'bookings/'+k));
+  refresh();
 }
-function saveRooms() {
-  localStorage.setItem('grav_rooms', JSON.stringify(rooms));
-  if (fbReady) FB.set(FB.ref(FB.db, 'rooms'), rooms);
+function saveRooms(){
+  localStorage.setItem('grav_rooms',JSON.stringify(rooms));
+  if(fbReady) FB.set(FB.ref(FB.db,'rooms'),rooms);
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // NAVEGAÇÃO
-// ═══════════════════════════════════════════════════════════
-function changeDate(dir) {
-  dateOffset += dir;
-  document.getElementById('date-label').textContent = formatDate(dateOffset);
+// ═══════════════════════════════════════════════
+function changeDate(dir){
+  dateOffset+=dir;
+  document.getElementById('date-label').textContent=fmtDate(dateOffset);
   refresh();
 }
-
-function switchView(v, el) {
-  currentView = v;
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+function switchView(v,el){
+  currentView=v;
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  ['single','overview','calendar'].forEach(id => {
-    document.getElementById('view-'+id).style.display = id===v ? 'block' : 'none';
+  ['single','overview','calendar'].forEach(id=>{
+    document.getElementById('view-'+id).style.display=id===v?'block':'none';
   });
-  document.getElementById('date-nav-bar').style.display = v==='calendar' ? 'none' : 'flex';
   refresh();
 }
-
-function refresh() {
-  if (currentView==='single')   renderSingle();
-  else if (currentView==='overview') renderOverview();
+function refresh(){
+  if(currentView==='single') renderSingle();
+  else if(currentView==='overview') renderOverview();
   else renderCalendar();
 }
 
-// ═══════════════════════════════════════════════════════════
-// RENDER — POR SALA
-// ═══════════════════════════════════════════════════════════
-function renderRoomTabs() {
-  const ct = document.getElementById('room-tabs'); ct.innerHTML = '';
-  rooms.forEach(r => {
-    const t = document.createElement('div');
-    t.className = 'rtab' + (r.id===currentRoom ? ' active' : '');
-    t.textContent = r.icon + ' ' + r.name;
-    if (r.id===currentRoom) t.style.background = r.color.hex;
-    t.onclick = () => { currentRoom = r.id; renderSingle(); };
+// ═══════════════════════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════════════════════
+function mkBooked(b, room){
+  const dur=b.end-b.start, isF=b.fixed;
+  const bg=isF?room.color.light:'#f0eeea';
+  const br=isF?room.color.hex+'88':'#b0aea8';
+  const co=isF?room.color.text:'#2c2b28';
+  const el=document.createElement('div');
+  el.className='slot booked';
+  el.style.cssText=`background:${bg};border-color:${br};color:${co};`;
+  el.innerHTML=
+    `<span class="bname">${b.name}</span>`+
+    (isF?`<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>`
+       :`<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>`)+
+    `<span class="btag" style="background:${isF?room.color.hex+'22':'#e0ddd8'};color:${isF?room.color.text:'#5a5956'}">${durLbl(dur)}</span>`;
+  if(!isF) el.onclick=()=>openCancelModal(room.id,b.slotKey,b.name);
+  else el.style.cursor='default';
+  return el;
+}
+
+function mkFree(label, availMin, roomId, day){
+  const el=document.createElement('div');
+  el.className='slot';
+  if(availMin<=30) el.style.cssText='border-style:dashed;opacity:.85;';
+  el.innerHTML=`<span class="free-lbl">${availMin<=30?'30 min disponíveis':'Disponível'}</span><span class="plus-i">+</span>`;
+  el.onclick=()=>openBookModal(roomId,day,label);
+  return el;
+}
+
+function addRow(ct, label, el, seen){
+  if(seen.has(label)) return;
+  seen.add(label);
+  const row=document.createElement('div'); row.className='srow';
+  const lbl=document.createElement('div'); lbl.className='tlbl'; lbl.textContent=label;
+  row.appendChild(lbl); row.appendChild(el); ct.appendChild(row);
+}
+
+// ═══════════════════════════════════════════════
+// RENDER SCHEDULE — lógica única compartilhada
+// ═══════════════════════════════════════════════
+function renderSchedule(ct, roomId, day, seen){
+  const room   = getRoom(roomId);
+  const blocks = getBlocks(roomId, day);
+
+  for(let hMin=DAY_START; hMin<DAY_END; hMin+=60){
+    const hLbl   = m2s(hMin);
+    const halfMin= hMin+30;
+    const halfLbl= m2s(halfMin);
+
+    const bH  = blocks.find(b=>b.start===hMin);       // bloco na hora cheia
+    const bHf = blocks.find(b=>b.start===halfMin);     // bloco no :30
+    const bPv = blocks.find(b=>b.start<hMin && b.end>hMin); // cobre esta hora
+
+    if(bPv){
+      // Hora coberta por bloco anterior
+      if(bHf){
+        addRow(ct,halfLbl,mkBooked(bHf,room),seen);
+        if(bHf.end-bHf.start===90){
+          const fs=halfMin+90;
+          if(fs<DAY_END && !blocks.find(b=>b.start===fs))
+            addRow(ct,m2s(fs),mkFree(m2s(fs),30,roomId,day),seen);
+        }
+      } else if(bPv.end===halfMin){
+        // bloco anterior termina no :30 → :30 livre
+        addRow(ct,halfLbl,mkFree(halfLbl,freeFrom(roomId,day,halfMin),roomId,day),seen);
+      }
+
+    } else if(bH){
+      // Bloco começa na hora cheia
+      addRow(ct,hLbl,mkBooked(bH,room),seen);
+      const dur=bH.end-bH.start;
+      if(dur<60){
+        // Reserva curta (30min): mostra o :30
+        if(bHf){
+          addRow(ct,halfLbl,mkBooked(bHf,room),seen);
+          if(bHf.end-bHf.start===90){
+            const fs=halfMin+90;
+            if(fs<DAY_END && !blocks.find(b=>b.start===fs))
+              addRow(ct,m2s(fs),mkFree(m2s(fs),30,roomId,day),seen);
+          }
+        } else {
+          addRow(ct,halfLbl,mkFree(halfLbl,freeFrom(roomId,day,halfMin),roomId,day),seen);
+        }
+      } else if(dur===90){
+        // 1h30: sobram 30min em hMin+90
+        const fs=hMin+90;
+        if(fs<DAY_END && !blocks.find(b=>b.start===fs))
+          addRow(ct,m2s(fs),mkFree(m2s(fs),30,roomId,day),seen);
+      }
+      // dur===60: termina na próxima hora cheia, sem sobra
+
+    } else if(bHf){
+      // Hora cheia livre, bloco no :30
+      addRow(ct,hLbl,mkFree(hLbl,30,roomId,day),seen);
+      addRow(ct,halfLbl,mkBooked(bHf,room),seen);
+      const dur=bHf.end-bHf.start;
+      if(dur===90){
+        const fs=halfMin+90;
+        if(fs<DAY_END && !blocks.find(b=>b.start===fs))
+          addRow(ct,m2s(fs),mkFree(m2s(fs),30,roomId,day),seen);
+      }
+
+    } else {
+      // Hora completamente livre
+      addRow(ct,hLbl,mkFree(hLbl,60,roomId,day),seen);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// RENDER POR SALA
+// ═══════════════════════════════════════════════
+function renderRoomTabs(){
+  const ct=document.getElementById('room-tabs'); ct.innerHTML='';
+  rooms.forEach(r=>{
+    const t=document.createElement('div');
+    t.className='rtab'+(r.id===currentRoom?' active':'');
+    t.textContent=r.icon+' '+r.name;
+    if(r.id===currentRoom) t.style.background=r.color.hex;
+    t.onclick=()=>{currentRoom=r.id; renderSingle();};
     ct.appendChild(t);
   });
 }
 
-function renderSingle() {
+function renderSingle(){
   renderRoomTabs();
-  const room = getRoom(currentRoom);
-  const ct   = document.getElementById('schedule'); ct.innerHTML = '';
-  if (!room) return;
-  const ds     = dateStr(dateOffset);
-  const blocks = getOccupiedBlocks(currentRoom, ds);
-
-  function makeBookedSlot(b) {
-    const isFixed = b.fixed;
-    const dur     = b.end - b.start;
-    const bg      = isFixed ? room.color.light    : '#f0eeea';
-    const border  = isFixed ? room.color.hex+'88' : '#b0aea8';
-    const color   = isFixed ? room.color.text     : '#2c2b28';
-    const el = document.createElement('div');
-    el.className = 'slot booked';
-    el.style.cssText = `background:${bg};border-color:${border};color:${color};`;
-    el.innerHTML = `
-      <span class="bname">${b.name}</span>
-      ${isFixed
-        ? `<span class="fixed-tag" style="background:${room.color.hex}22;color:${room.color.text}">Aula fixa</span>`
-        : '<span class="fixed-tag" style="background:#e0ddd8;color:#5a5956">Avulsa</span>'}
-      <span class="btag" style="background:${isFixed?room.color.hex+'22':'#e0ddd8'};color:${isFixed?room.color.text:'#5a5956'}">${durLabel(dur)}</span>
-    `;
-    if (!isFixed) el.onclick = () => openCancelModal(currentRoom, ds, b.slotKey, b.name);
-    else el.style.cursor = 'default';
-    return el;
-  }
-
-  function makeFreeSlot(slotLabel, availMin) {
-    const el = document.createElement('div');
-    el.className = 'slot';
-    if (availMin === 30) el.style.cssText = 'border-style:dashed;opacity:0.85;';
-    el.innerHTML = availMin === 30
-      ? `<span class="free-lbl">30 min disponíveis</span><span class="plus-i">+</span>`
-      : `<span class="free-lbl">Disponível</span><span class="plus-i">+</span>`;
-    el.onclick = () => openBookModal(currentRoom, ds, slotLabel, availMin);
-    return el;
-  }
-
-  function addRow(timeLabel, slotEl) {
-    const row = document.createElement('div'); row.className = 'srow';
-    const lbl = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = timeLabel;
-    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
-  }
-
-  // Percorre TODAS as horas cheias de 07:00 a 21:00 — sempre visíveis
-  // Rastreia quais labels já foram adicionados para evitar duplicatas
-  const rendered = new Set();
-
-  function addRowOnce(timeLabel, slotEl) {
-    if (rendered.has(timeLabel)) return;
-    rendered.add(timeLabel);
-    const row = document.createElement('div'); row.className = 'srow';
-    const lbl = document.createElement('div'); lbl.className = 'tlbl'; lbl.textContent = timeLabel;
-    row.appendChild(lbl); row.appendChild(slotEl); ct.appendChild(row);
-  }
-
-  for (let hMin = DAY_START; hMin < DAY_END; hMin += 60) {
-    const hourLabel = minToSlot(hMin);
-    const halfMin   = hMin + 30;
-    const halfLabel = minToSlot(halfMin);
-
-    const bHour = blocks.find(b => b.start === hMin);
-    const bHalf = blocks.find(b => b.start === halfMin);
-    const bPrev = blocks.find(b => b.start < hMin && b.end > hMin);
-
-    if (bPrev) {
-      // Esta hora está coberta por bloco anterior — não mostra a hora cheia
-      // Mas verifica se o :30 desta hora tem bloco próprio ou é o fim do bPrev
-      if (bHalf) {
-        addRowOnce(halfLabel, makeBookedSlot(bHalf));
-        if (bHalf.end - bHalf.start === 90) {
-          const freeStart = halfMin + 90;
-          if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
-            addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
-          }
-        }
-      } else if (bPrev.end === halfMin) {
-        // bPrev termina no :30 desta hora → 30min livres
-        addRowOnce(halfLabel, makeFreeSlot(halfLabel, 30));
-      }
-      // se bPrev.end === hMin+60 (hora seguinte), não faz nada — a próxima iteração trata
-
-    } else if (bHour) {
-      addRowOnce(hourLabel, makeBookedSlot(bHour));
-      const dur = bHour.end - bHour.start;
-      if (dur === 90) {
-        const freeStart = hMin + 90;
-        if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
-          addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
-        }
-      } else if (dur < 60) {
-        // Reserva curta (30min) — há espaço no :30, mostra o que estiver lá
-        if (bHalf) {
-          addRowOnce(halfLabel, makeBookedSlot(bHalf));
-          if (bHalf.end - bHalf.start === 90) {
-            const freeStart = halfMin + 90;
-            if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
-              addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
-            }
-          }
-        } else {
-          // :30 livre após reserva de 30min
-          addRowOnce(halfLabel, makeFreeSlot(halfLabel, freeMinutesFrom(currentRoom, ds, halfMin)));
-        }
-      }
-
-    } else if (bHalf) {
-      // Hora cheia livre, aula começa no :30
-      addRowOnce(hourLabel, makeFreeSlot(hourLabel, 30));
-      addRowOnce(halfLabel, makeBookedSlot(bHalf));
-      const dur = bHalf.end - bHalf.start;
-      if (dur === 90) {
-        // 1h30 no :30 → termina em halfMin+90 (próxima hora cheia + 30min)
-        // Mostra o slot livre de 30min após o bloco
-        const freeStart = halfMin + 90;
-        if (freeStart < DAY_END && !blocks.find(b => b.start === freeStart)) {
-          addRowOnce(minToSlot(freeStart), makeFreeSlot(minToSlot(freeStart), 30));
-        }
-        // Marca a hora cheia seguinte como "já tratada pelo bPrev" — não precisa fazer nada
-        // (a iteração seguinte verá bPrev e não mostrará duplicata graças ao addRowOnce)
-      }
-      // se 1h no :30 → termina na hora cheia seguinte, sem sobra
-
-    } else {
-      // Hora completamente livre
-      addRowOnce(hourLabel, makeFreeSlot(hourLabel, 60));
-    }
-  }
+  const ct=document.getElementById('schedule'); ct.innerHTML='';
+  renderSchedule(ct, currentRoom, ds(dateOffset), new Set());
 }
 
-// ═══════════════════════════════════════════════════════════
-// RENDER — VISÃO GERAL
-// ═══════════════════════════════════════════════════════════
-function renderOverview() {
-  const ct = document.getElementById('overview'); ct.innerHTML = '';
-  const ds = dateStr(dateOffset);
-
-  rooms.forEach(room => {
-    const sec = document.createElement('div'); sec.className = 'ov-room';
-    const hdr = document.createElement('div'); hdr.className = 'ov-room-header';
-    hdr.innerHTML = `<div class="ov-dot" style="background:${room.color.hex}"></div><div class="ov-name">${room.icon} ${room.name}</div>`;
+// ═══════════════════════════════════════════════
+// RENDER VISÃO GERAL
+// ═══════════════════════════════════════════════
+function renderOverview(){
+  const ct=document.getElementById('overview'); ct.innerHTML='';
+  const day=ds(dateOffset);
+  rooms.forEach(room=>{
+    const sec=document.createElement('div'); sec.className='ov-room';
+    const hdr=document.createElement('div'); hdr.className='ov-room-header';
+    hdr.innerHTML=`<div class="ov-dot" style="background:${room.color.hex}"></div><div class="ov-name">${room.icon} ${room.name}</div>`;
     sec.appendChild(hdr);
+    const sDiv=document.createElement('div'); sDiv.className='ov-slots';
+    const blocks=getBlocks(room.id,day);
+    const seen=new Set();
 
-    const sDiv   = document.createElement('div'); sDiv.className = 'ov-slots';
-    const blocks = getOccupiedBlocks(room.id, ds);
-    const renderedOv = new Set();
-
-    // Mesma lógica do renderSingle: grade fixa horária + extras quando necessário
-    for (let hMin = DAY_START; hMin < DAY_END; hMin += 60) {
-      const hourLabel = minToSlot(hMin);
-      const halfMin   = hMin + 30;
-      const halfLabel = minToSlot(halfMin);
-      const bHour = blocks.find(b => b.start === hMin);
-      const bHalf = blocks.find(b => b.start === halfMin);
-      const bPrev = blocks.find(b => b.start < hMin && b.end > hMin);
-
-      function makeOvSlot(label, block, availMin) {
-        const s = document.createElement('div');
-        if (block) {
-          s.className = 'ov-slot ov-booked';
-          s.style.background = block.fixed ? room.color.hex : '#7a7874';
-          s.title = block.name + (block.fixed ? ' · Aula fixa' : ' · Avulsa') + ' · ' + durLabel(block.end - block.start);
-          s.textContent = label;
-          if (!block.fixed) s.onclick = () => openCancelModal(room.id, ds, block.slotKey, block.name);
-        } else {
-          s.className = 'ov-slot';
-          s.title = availMin === 30 ? '30 min disponíveis' : 'Disponível';
-          s.textContent = label;
-          s.style.opacity = availMin === 30 ? '0.6' : '1';
-          s.onclick = () => { currentRoom = room.id; openBookModal(room.id, ds, label, availMin || 60); };
-        }
-        return s;
-      }
-
-      if (bPrev) {
-        if (bHalf) {
-          renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, bHalf, null)));
-          if (bHalf.end - bHalf.start === 90) {
-            const fs = halfMin + 90;
-            if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
-              renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
-            }
-          }
-        } else if (bPrev.end === halfMin && !renderedOv.has(halfLabel)) {
-          renderedOv.add(halfLabel); sDiv.appendChild(makeOvSlot(halfLabel, null, 30));
-        }
-      } else if (bHour) {
-        renderedOv.has(hourLabel) || (renderedOv.add(hourLabel), sDiv.appendChild(makeOvSlot(hourLabel, bHour, null)));
-        const durHour = bHour.end - bHour.start;
-        if (durHour === 90) {
-          const fs = hMin + 90;
-          if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
-            renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
-          }
-        } else if (durHour < 60) {
-          if (bHalf) {
-            renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, bHalf, null)));
-            if (bHalf.end - bHalf.start === 90) {
-              const fs = halfMin + 90;
-              if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
-                renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
-              }
-            }
-          } else {
-            renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, null, 30)));
-          }
-        }
-      } else if (bHalf) {
-        renderedOv.has(hourLabel) || (renderedOv.add(hourLabel), sDiv.appendChild(makeOvSlot(hourLabel, null, 30)));
-        renderedOv.has(halfLabel) || (renderedOv.add(halfLabel), sDiv.appendChild(makeOvSlot(halfLabel, bHalf, null)));
-        if (bHalf.end - bHalf.start === 90) {
-          const fs = halfMin + 90;
-          if (fs < DAY_END && !blocks.find(b => b.start === fs) && !renderedOv.has(minToSlot(fs))) {
-            renderedOv.add(minToSlot(fs)); sDiv.appendChild(makeOvSlot(minToSlot(fs), null, 30));
-          }
-        }
+    function addOv(label,block){
+      if(seen.has(label)) return; seen.add(label);
+      const s=document.createElement('div');
+      s.className='ov-slot'+(block?' booked':'');
+      s.textContent=label;
+      if(block){
+        s.style.background=block.fixed?room.color.hex:'#7a7874';
+        s.title=block.name+(block.fixed?' · Aula fixa':' · Avulsa')+' · '+durLbl(block.end-block.start);
+        if(!block.fixed) s.onclick=()=>openCancelModal(room.id,block.slotKey,block.name);
       } else {
-        renderedOv.has(hourLabel) || (renderedOv.add(hourLabel), sDiv.appendChild(makeOvSlot(hourLabel, null, 60)));
+        s.onclick=()=>{currentRoom=room.id; openBookModal(room.id,day,label);};
       }
+      sDiv.appendChild(s);
     }
 
+    for(let hMin=DAY_START; hMin<DAY_END; hMin+=60){
+      const hLbl=m2s(hMin),halfMin=hMin+30,halfLbl=m2s(halfMin);
+      const bH =blocks.find(b=>b.start===hMin);
+      const bHf=blocks.find(b=>b.start===halfMin);
+      const bPv=blocks.find(b=>b.start<hMin&&b.end>hMin);
+      if(bPv){
+        if(bHf){ addOv(halfLbl,bHf); if(bHf.end-bHf.start===90){const fs=halfMin+90;if(fs<DAY_END&&!blocks.find(b=>b.start===fs))addOv(m2s(fs),null);} }
+        else if(bPv.end===halfMin) addOv(halfLbl,null);
+      } else if(bH){
+        addOv(hLbl,bH);
+        const dur=bH.end-bH.start;
+        if(dur<60){ if(bHf)addOv(halfLbl,bHf); else addOv(halfLbl,null); }
+        else if(dur===90){const fs=hMin+90;if(fs<DAY_END&&!blocks.find(b=>b.start===fs))addOv(m2s(fs),null);}
+      } else if(bHf){
+        addOv(hLbl,null); addOv(halfLbl,bHf);
+        if(bHf.end-bHf.start===90){const fs=halfMin+90;if(fs<DAY_END&&!blocks.find(b=>b.start===fs))addOv(m2s(fs),null);}
+      } else { addOv(hLbl,null); }
+    }
     sec.appendChild(sDiv); ct.appendChild(sec);
   });
 }
 
-// ═══════════════════════════════════════════════════════════
-// RENDER — CALENDÁRIO
-// ═══════════════════════════════════════════════════════════
-function renderCalendar() {
-  const ct = document.getElementById('calendar'); ct.innerHTML = '';
-  const year = calMonth.getFullYear(), month = calMonth.getMonth();
-  const monthStr = calMonth.toLocaleDateString('pt-BR', { month:'long', year:'numeric' });
-
-  const hdr = document.createElement('div'); hdr.className = 'cal-header';
-  hdr.innerHTML = `<button class="cal-nav-btn" onclick="calNav(-1)">‹</button><h2>${monthStr}</h2><button class="cal-nav-btn" onclick="calNav(1)">›</button>`;
+// ═══════════════════════════════════════════════
+// RENDER CALENDÁRIO
+// ═══════════════════════════════════════════════
+function renderCalendar(){
+  const ct=document.getElementById('calendar'); ct.innerHTML='';
+  const year=calMonth.getFullYear(), month=calMonth.getMonth();
+  const monthStr=calMonth.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  const hdr=document.createElement('div'); hdr.className='cal-header';
+  hdr.innerHTML=`<button class="cal-nav-btn" onclick="calNav(-1)">‹</button><h2>${monthStr}</h2><button class="cal-nav-btn" onclick="calNav(1)">›</button>`;
   ct.appendChild(hdr);
-
-  const grid = document.createElement('div'); grid.className = 'cal-grid';
-  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d => {
-    const wd = document.createElement('div'); wd.className = 'cal-weekday'; wd.textContent = d; grid.appendChild(wd);
+  const grid=document.createElement('div'); grid.className='cal-grid';
+  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d=>{
+    const wd=document.createElement('div'); wd.className='cal-weekday'; wd.textContent=d; grid.appendChild(wd);
   });
-
-  const first = new Date(year, month, 1);
-  const last  = new Date(year, month+1, 0);
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  function makeCell(date, other) {
-    const ds     = dateStrOf(date);
-    const isToday = date.getTime() === today.getTime();
-    const isSel   = selectedCalDay && dateStrOf(selectedCalDay) === ds;
-    const tl      = buildTimeline(rooms[0]?.id || '', ds); // quick check any room
-    let hasB = false;
-    rooms.forEach(r => {
-      if (buildTimeline(r.id, ds).some(i => i.type==='booked')) hasB = true;
-    });
-    const cell = document.createElement('div');
-    cell.className = 'cal-day'
-      + (other   ? ' other-month' : '')
-      + (isToday ? ' today'       : '')
-      + (isSel && !isToday ? ' selected' : '')
-      + (hasB    ? ' has-bookings': '');
-    cell.textContent = date.getDate();
-    cell.onclick = () => { selectedCalDay = new Date(date); renderCalendar(); };
+  const first=new Date(year,month,1), last=new Date(year,month+1,0);
+  const today=new Date(); today.setHours(0,0,0,0);
+  function makeCell(date,other){
+    const dstr=dsOf(date);
+    const isToday=date.getTime()===today.getTime();
+    const isSel=selCalDay&&dsOf(selCalDay)===dstr;
+    let hasB=false;
+    rooms.forEach(r=>{if(getBlocks(r.id,dstr).length>0)hasB=true;});
+    const cell=document.createElement('div');
+    cell.className='cal-day'+(other?' other-month':'')+(isToday?' today':'')+(isSel&&!isToday?' selected':'')+(hasB?' has-bookings':'');
+    cell.textContent=date.getDate();
+    cell.onclick=()=>{selCalDay=new Date(date);renderCalendar();};
     return cell;
   }
-
-  for (let i=0; i<first.getDay(); i++) grid.appendChild(makeCell(new Date(year,month,-first.getDay()+1+i), true));
-  for (let d=1; d<=last.getDate(); d++) grid.appendChild(makeCell(new Date(year,month,d), false));
-  const lastDow = last.getDay();
-  if (lastDow<6) for (let i=1; i<=6-lastDow; i++) grid.appendChild(makeCell(new Date(year,month+1,i), true));
+  for(let i=0;i<first.getDay();i++) grid.appendChild(makeCell(new Date(year,month,-first.getDay()+1+i),true));
+  for(let d=1;d<=last.getDate();d++) grid.appendChild(makeCell(new Date(year,month,d),false));
+  const lastDow=last.getDay();
+  if(lastDow<6) for(let i=1;i<=6-lastDow;i++) grid.appendChild(makeCell(new Date(year,month+1,i),true));
   ct.appendChild(grid);
-
-  if (selectedCalDay) {
-    const ds    = dateStrOf(selectedCalDay);
-    const label = selectedCalDay.toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' });
-    const detail = document.createElement('div'); detail.className = 'cal-detail';
-    const h3 = document.createElement('h3'); h3.textContent = label; detail.appendChild(h3);
-    let count = 0;
-    rooms.forEach(room => {
-      buildTimeline(room.id, ds).forEach(item => {
-        if (item.type !== 'booked') return;
+  if(selCalDay){
+    const dstr=dsOf(selCalDay);
+    const label=selCalDay.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+    const detail=document.createElement('div'); detail.className='cal-detail';
+    const h3=document.createElement('h3'); h3.textContent=label; detail.appendChild(h3);
+    let count=0;
+    rooms.forEach(room=>{
+      getBlocks(room.id,dstr).forEach(b=>{
         count++;
-        const dur = item.end - item.start;
-        const item2 = document.createElement('div'); item2.className = 'cal-item';
-        item2.innerHTML = `
-          <div class="cal-item-dot" style="background:${item.fixed ? room.color.hex : '#7a7874'}"></div>
-          <div>
-            <div class="cal-item-time">${minToSlot(item.start)} · ${durLabel(dur)}${item.fixed?' · Aula fixa':' · Avulsa'}</div>
-            <div class="cal-item-room">${room.icon} ${room.name}</div>
-          </div>
-          <div class="cal-item-name">${item.name}</div>
-        `;
-        detail.appendChild(item2);
+        const item=document.createElement('div'); item.className='cal-item';
+        item.innerHTML=`<div class="cal-item-dot" style="background:${b.fixed?room.color.hex:'#7a7874'}"></div><div><div class="cal-item-time">${m2s(b.start)} · ${durLbl(b.end-b.start)}${b.fixed?' · Aula fixa':' · Avulsa'}</div><div class="cal-item-room">${room.icon} ${room.name}</div></div><div class="cal-item-name">${b.name}</div>`;
+        detail.appendChild(item);
       });
     });
-    if (!count) { const em = document.createElement('p'); em.className = 'cal-empty'; em.textContent = 'Nenhuma reserva neste dia.'; detail.appendChild(em); }
+    if(!count){const em=document.createElement('p');em.className='cal-empty';em.textContent='Nenhuma reserva neste dia.';detail.appendChild(em);}
     ct.appendChild(detail);
   }
 }
+function calNav(dir){calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+dir,1);renderCalendar();}
 
-function calNav(dir) {
-  calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()+dir, 1);
-  renderCalendar();
-}
-
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // MODAIS
-// ═══════════════════════════════════════════════════════════
-// Calcula quantos minutos livres existem a partir de startMin numa sala+dia
-function freeMinutesFrom(roomId, ds, startMin) {
-  const blocks = getOccupiedBlocks(roomId, ds);
-  // Próximo bloco que começa DEPOIS de startMin
-  const next = blocks.filter(b => b.start >= startMin + 1).sort((a,b) => a.start - b.start)[0];
-  const freeUntil = next ? next.start : DAY_END;
-  return freeUntil - startMin;
-}
-
-function selectDur(btn) {
-  if (btn.disabled) return;
-  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
+// ═══════════════════════════════════════════════
+function selectDur(btn){
+  if(btn.disabled) return;
+  document.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('dur-error').classList.remove('show');
 }
 
-function openBookModal(roomId, ds, slot, availableMin) {
-  const startMin = slotToMin(slot);
-  const realFree = freeMinutesFrom(roomId, ds, startMin);
-
-  pendingSlot = { roomId, ds, slot, freeMin: realFree };
-  const room  = getRoom(roomId);
-  document.getElementById('book-title').textContent = 'Reservar — ' + room.name;
-  document.getElementById('book-sub').textContent   = formatDateStr(ds) + ' · ' + slot;
-  document.getElementById('prof-name').value = '';
+function openBookModal(roomId, day, slot){
+  const startMin=s2m(slot);
+  const free=freeFrom(roomId,day,startMin);
+  pendingSlot={roomId,day,slot,free};
+  const room=getRoom(roomId);
+  document.getElementById('book-title').textContent='Reservar — '+room.name;
+  document.getElementById('book-sub').textContent=fmtDateStr(day)+' · '+slot;
+  document.getElementById('prof-name').value='';
   document.getElementById('dur-error').classList.remove('show');
-  document.getElementById('dur-error').textContent = '';
-
-  // Habilita/desabilita botões conforme espaço livre real
-  document.querySelectorAll('.dur-btn').forEach(btn => {
-    const dur = parseInt(btn.dataset.dur);
-    const ok  = realFree >= dur;
-    btn.disabled      = !ok;
-    btn.style.opacity = ok ? '1' : '0.3';
-    btn.classList.remove('active');
+  document.querySelectorAll('.dur-btn').forEach(btn=>{
+    const d=parseInt(btn.dataset.dur), ok=free>=d;
+    btn.disabled=!ok; btn.style.opacity=ok?'1':'0.3'; btn.classList.remove('active');
   });
-
-  // Seleciona o maior disponível como padrão (1h preferível a 30min)
-  const preferred = realFree >= 60 ? '60' : '30';
-  const defaultBtn = document.querySelector(`.dur-btn[data-dur="${preferred}"]:not([disabled])`);
-  if (defaultBtn) defaultBtn.classList.add('active');
-
+  const pref=free>=60?'60':'30';
+  const def=document.querySelector(`.dur-btn[data-dur="${pref}"]:not([disabled])`);
+  if(def) def.classList.add('active');
   document.getElementById('modal-book').classList.add('open');
-  setTimeout(() => document.getElementById('prof-name').focus(), 150);
+  setTimeout(()=>document.getElementById('prof-name').focus(),150);
 }
+function closeBookModal(){document.getElementById('modal-book').classList.remove('open');pendingSlot=null;}
 
-function closeBookModal() { document.getElementById('modal-book').classList.remove('open'); pendingSlot = null; }
-
-function confirmBooking() {
-  const name = document.getElementById('prof-name').value.trim();
-  if (!name) { document.getElementById('prof-name').focus(); return; }
-
-  const activeBtn = document.querySelector('.dur-btn.active:not([disabled])');
-  if (!activeBtn) {
-    document.getElementById('dur-error').textContent = 'Selecione a duração da aula.';
+function confirmBooking(){
+  const name=document.getElementById('prof-name').value.trim();
+  if(!name){document.getElementById('prof-name').focus();return;}
+  const ab=document.querySelector('.dur-btn.active:not([disabled])');
+  if(!ab) return;
+  const dur=parseInt(ab.dataset.dur);
+  const{roomId,day,slot}=pendingSlot;
+  if(isOccupied(roomId,day,s2m(slot),s2m(slot)+dur)){
+    document.getElementById('dur-error').textContent='Conflito com outra aula.';
     document.getElementById('dur-error').classList.add('show'); return;
   }
-
-  const dur      = parseInt(activeBtn.dataset.dur);
-  const { roomId, ds, slot, freeMin } = pendingSlot;
-  const startMin = slotToMin(slot);
-
-  // Verificação final de conflito
-  if (isOccupied(roomId, ds, startMin, startMin + dur)) {
-    document.getElementById('dur-error').textContent = 'Horário em conflito com outra aula.';
-    document.getElementById('dur-error').classList.add('show'); return;
-  }
-
-  const val = dur === 90 ? name + ' |1h30|' : dur === 30 ? name + ' |30min|' : name;
-  writeSlot(roomId, ds, slot, val);
+  const val=dur===90?name+' |1h30|':dur===30?name+' |30min|':name;
+  writeSlot(roomId,day,slot,val);
   closeBookModal();
-  showToast('✓ ' + getRoom(roomId).name + ' reservada para ' + name + '!');
+  showToast('✓ '+getRoom(roomId).name+' reservada para '+name+'!');
 }
 
-function openCancelModal(roomId, ds, slot, name) {
-  cancelSlot = { roomId, ds, slot };
-  const room = getRoom(roomId);
-  document.getElementById('cancel-title').textContent = 'Cancelar reserva — ' + room.name;
-  document.getElementById('cancel-sub').textContent   = name + ' · ' + formatDateStr(ds) + ' · ' + slot;
-  document.getElementById('admin-pwd').value = '';
+function openCancelModal(roomId, slot, name){
+  cancelSlot={roomId,day:ds(dateOffset),slot};
+  const room=getRoom(roomId);
+  document.getElementById('cancel-title').textContent='Sala '+room.name;
+  document.getElementById('cancel-sub').textContent=name+' · '+fmtDateStr(ds(dateOffset))+' · '+slot;
+  document.getElementById('admin-pwd').value='';
   document.getElementById('pwd-error').classList.remove('show');
   document.getElementById('modal-cancel').classList.add('open');
-  setTimeout(() => document.getElementById('admin-pwd').focus(), 150);
+  setTimeout(()=>document.getElementById('admin-pwd').focus(),150);
 }
-function closeCancelModal() { document.getElementById('modal-cancel').classList.remove('open'); cancelSlot = null; }
-function confirmCancel() {
-  const pwd = document.getElementById('admin-pwd').value;
-  if (pwd !== ADMIN_PASSWORD) {
+function closeCancelModal(){document.getElementById('modal-cancel').classList.remove('open');cancelSlot=null;}
+function confirmCancel(){
+  if(document.getElementById('admin-pwd').value!==ADMIN_PASSWORD){
     document.getElementById('pwd-error').classList.add('show');
-    document.getElementById('admin-pwd').value = '';
-    document.getElementById('admin-pwd').focus();
-    return;
+    document.getElementById('admin-pwd').value=''; return;
   }
-  deleteSlot(cancelSlot.roomId, cancelSlot.ds, cancelSlot.slot);
-  closeCancelModal();
-  showToast('Reserva cancelada.');
+  deleteSlot(cancelSlot.roomId,cancelSlot.day,cancelSlot.slot);
+  closeCancelModal(); showToast('Reserva cancelada.');
 }
 
-function formatDateStr(ds) {
-  const d = new Date(ds + 'T12:00:00');
-  return d.toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short' });
-}
-
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // CONFIGURAÇÕES
-// ═══════════════════════════════════════════════════════════
-function openSettings()  { renderSettings(); document.getElementById('settings-overlay').classList.add('open'); document.getElementById('settings-panel').classList.add('open'); }
-function closeSettings() { document.getElementById('settings-overlay').classList.remove('open'); document.getElementById('settings-panel').classList.remove('open'); }
-
-function renderSettings() {
-  const ct = document.getElementById('settings-content'); ct.innerHTML = '';
-  const intro = document.createElement('p');
-  intro.style.cssText = 'font-size:13px;color:var(--text2);margin-bottom:1.25rem';
-  intro.textContent = 'Mudanças nas salas valem para todos os professores em tempo real.';
+// ═══════════════════════════════════════════════
+function openSettings(){renderSettings();document.getElementById('settings-overlay').classList.add('open');document.getElementById('settings-panel').classList.add('open');}
+function closeSettings(){document.getElementById('settings-overlay').classList.remove('open');document.getElementById('settings-panel').classList.remove('open');}
+function renderSettings(){
+  const ct=document.getElementById('settings-content'); ct.innerHTML='';
+  const intro=document.createElement('p');
+  intro.style.cssText='font-size:13px;color:var(--text2);margin-bottom:1.25rem';
+  intro.textContent='Mudanças valem para todos os professores em tempo real.';
   ct.appendChild(intro);
-
-  rooms.forEach(room => {
-    const card = document.createElement('div'); card.className = 'room-card';
-    const hdr  = document.createElement('div'); hdr.className = 'room-card-hdr';
-    hdr.innerHTML = `<div class="dot" style="background:${room.color.hex}"></div><span>${room.name}</span>`;
+  rooms.forEach(room=>{
+    const card=document.createElement('div'); card.className='room-card';
+    const hdr=document.createElement('div'); hdr.className='room-card-hdr';
+    hdr.innerHTML=`<div class="dot" style="background:${room.color.hex}"></div><span style="font-size:15px;font-weight:600">${room.name}</span>`;
     card.appendChild(hdr);
-
-    const l1 = document.createElement('label'); l1.className='field-label'; l1.textContent='Nome da sala';
-    const inp = document.createElement('input'); inp.className='field-input'; inp.type='text'; inp.value=room.name; inp.maxLength=30; inp.id='rname-'+room.id;
+    const l1=document.createElement('label'); l1.className='field-label'; l1.textContent='Nome da sala';
+    const inp=document.createElement('input'); inp.className='field-input'; inp.type='text'; inp.value=room.name; inp.maxLength=30; inp.id='rname-'+room.id;
     card.appendChild(l1); card.appendChild(inp);
-
-    const l2 = document.createElement('label'); l2.className='field-label'; l2.textContent='Cor';
-    const crow = document.createElement('div'); crow.className='color-row';
-    COLOR_OPTIONS.forEach(c => {
-      const cp = document.createElement('div'); cp.className='cpick'+(c.hex===room.color.hex?' selected':'');
+    const l2=document.createElement('label'); l2.className='field-label'; l2.textContent='Cor';
+    const crow=document.createElement('div'); crow.className='color-row';
+    COLOR_OPTIONS.forEach(c=>{
+      const cp=document.createElement('div'); cp.className='cpick'+(c.hex===room.color.hex?' selected':'');
       cp.style.background=c.hex; cp.title=c.label;
       cp.setAttribute('data-rid',room.id); cp.setAttribute('data-hex',c.hex);
-      cp.onclick = function(){ document.querySelectorAll('[data-rid="'+room.id+'"]').forEach(x=>x.classList.remove('selected')); this.classList.add('selected'); };
+      cp.onclick=function(){document.querySelectorAll('[data-rid="'+room.id+'"]').forEach(x=>x.classList.remove('selected'));this.classList.add('selected');};
       crow.appendChild(cp);
     });
     card.appendChild(l2); card.appendChild(crow);
-
-    const acts = document.createElement('div'); acts.className='card-actions';
-    const sv = document.createElement('button'); sv.className='btn btn-primary'; sv.textContent='Salvar'; sv.onclick=()=>saveRoom(room.id); acts.appendChild(sv);
-    if (rooms.length>1) { const dl=document.createElement('button'); dl.className='btn btn-danger'; dl.textContent='Remover'; dl.onclick=()=>deleteRoom(room.id); acts.appendChild(dl); }
+    const acts=document.createElement('div'); acts.className='card-actions';
+    const sv=document.createElement('button'); sv.className='btn btn-primary'; sv.textContent='Salvar'; sv.onclick=()=>saveRoom(room.id); acts.appendChild(sv);
+    if(rooms.length>1){const dl=document.createElement('button');dl.className='btn btn-danger';dl.textContent='Remover';dl.onclick=()=>deleteRoom(room.id);acts.appendChild(dl);}
     card.appendChild(acts); ct.appendChild(card);
   });
-
-  const addBtn = document.createElement('button'); addBtn.className='add-room-btn'; addBtn.textContent='+ Adicionar nova sala'; addBtn.onclick=addRoom; ct.appendChild(addBtn);
+  const addBtn=document.createElement('button'); addBtn.className='add-room-btn'; addBtn.textContent='+ Adicionar nova sala'; addBtn.onclick=addRoom; ct.appendChild(addBtn);
 }
-
-function saveRoom(id) {
-  const room = getRoom(id);
-  const name = document.getElementById('rname-'+id).value.trim();
-  if (!name) { showToast('Digite um nome.'); return; }
-  const sel = document.querySelector('.cpick.selected[data-rid="'+id+'"]');
-  room.name  = name;
-  room.color = (sel ? COLOR_OPTIONS.find(c=>c.hex===sel.getAttribute('data-hex')) : null) || room.color;
-  saveRooms(); renderSettings(); refresh();
-  showToast('✓ Sala "'+name+'" atualizada!');
+function saveRoom(id){
+  const room=getRoom(id);
+  const name=document.getElementById('rname-'+id).value.trim();
+  if(!name){showToast('Digite um nome.');return;}
+  const sel=document.querySelector('.cpick.selected[data-rid="'+id+'"]');
+  room.name=name; room.color=(sel?COLOR_OPTIONS.find(c=>c.hex===sel.getAttribute('data-hex')):null)||room.color;
+  saveRooms(); renderSettings(); refresh(); showToast('✓ Sala "'+name+'" atualizada!');
 }
-function deleteRoom(id) {
-  if (rooms.length<=1){ showToast('Precisa ter ao menos uma sala.'); return; }
-  rooms = rooms.filter(r=>r.id!==id);
-  if (currentRoom===id) currentRoom=rooms[0].id;
+function deleteRoom(id){
+  if(rooms.length<=1){showToast('Precisa ter ao menos uma sala.');return;}
+  rooms=rooms.filter(r=>r.id!==id);
+  if(currentRoom===id) currentRoom=rooms[0].id;
   saveRooms(); renderSettings(); refresh(); showToast('Sala removida.');
 }
-function addRoom() {
-  const id   = 'room_'+Date.now();
-  const used = rooms.map(r=>r.color.hex);
-  const col  = COLOR_OPTIONS.find(c=>!used.includes(c.hex)) || COLOR_OPTIONS[0];
-  rooms.push({ id, name:'Nova Sala', icon:'◆', color:col });
+function addRoom(){
+  const id='room_'+Date.now();
+  const used=rooms.map(r=>r.color.hex);
+  const col=COLOR_OPTIONS.find(c=>!used.includes(c.hex))||COLOR_OPTIONS[0];
+  rooms.push({id,name:'Nova Sala',icon:'◆',color:col});
   saveRooms(); renderSettings(); showToast('Nova sala adicionada!');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // TOAST
-// ═══════════════════════════════════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2500);
+// ═══════════════════════════════════════════════
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════
-document.getElementById('date-label').textContent = formatDate(0);
-
-document.getElementById('modal-book').addEventListener('click',   e=>{ if(e.target.id==='modal-book')   closeBookModal(); });
-document.getElementById('modal-cancel').addEventListener('click', e=>{ if(e.target.id==='modal-cancel') closeCancelModal(); });
-document.getElementById('prof-name').addEventListener('keydown',  e=>{ if(e.key==='Enter') confirmBooking(); });
-document.getElementById('admin-pwd').addEventListener('keydown',  e=>{ if(e.key==='Enter') confirmCancel(); });
+// ═══════════════════════════════════════════════
+document.getElementById('date-label').textContent=fmtDate(0);
+document.getElementById('modal-book').addEventListener('click',e=>{if(e.target.id==='modal-book')closeBookModal();});
+document.getElementById('modal-cancel').addEventListener('click',e=>{if(e.target.id==='modal-cancel')closeCancelModal();});
+document.getElementById('prof-name').addEventListener('keydown',e=>{if(e.key==='Enter')confirmBooking();});
+document.getElementById('admin-pwd').addEventListener('keydown',e=>{if(e.key==='Enter')confirmCancel();});
 </script>
 </body>
 </html>
