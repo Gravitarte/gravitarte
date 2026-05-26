@@ -22,10 +22,14 @@
       appId:             "1:657622099981:web:5724a4d5b56288f5a44d44"
     };
     // ────────────────────────────────────────────────
-    const app = initializeApp(firebaseConfig);
-    const db  = getDatabase(app);
-    window._fb = { db, ref, set, remove, onValue };
-    window.dispatchEvent(new Event('firebase-ready'));
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db  = getDatabase(app);
+      window._fb = { db, ref, set, remove, onValue };
+      window.dispatchEvent(new Event('firebase-ready'));
+    } catch(e) {
+      console.warn('Firebase não configurado, rodando offline.');
+    }
   </script>
 
   <style>
@@ -344,25 +348,29 @@ window.addEventListener('firebase-ready', () => {
   FB.onValue(FB.ref(FB.db,'bookings'), snap => {
     bookings = snap.val() || {};
     badge('ok');
-    document.getElementById('loading').style.display='none';
-    document.getElementById('main-app').style.display='block';
     refresh();
-  }, () => {
-    badge('err');
-    document.getElementById('loading').style.display='none';
-    document.getElementById('main-app').style.display='block';
-  });
+  }, () => { badge('err'); });
   FB.onValue(FB.ref(FB.db,'rooms'), snap => {
     if(snap.val()){rooms=snap.val();localStorage.setItem('grav_rooms',JSON.stringify(rooms));refresh();}
   });
 });
+
+// Mostra o app IMEDIATAMENTE — aulas fixas não precisam do Firebase
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loading').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  document.getElementById('date-label').textContent=fmtDate(0);
+  refresh();
+});
+
+// Timeout de segurança caso DOMContentLoaded já tenha disparado
 setTimeout(()=>{
   if(document.getElementById('loading').style.display!=='none'){
     document.getElementById('loading').style.display='none';
     document.getElementById('main-app').style.display='block';
     badge('err'); refresh();
   }
-},5000);
+},2000);
 function badge(s){
   const b=document.getElementById('sync-badge');
   b.className='sync-badge '+s;
@@ -532,6 +540,7 @@ function renderSchedule(ct, roomId, day, seen){
     if(bPv){
       // Hora coberta por bloco anterior
       if(bHf){
+        // Há bloco no :30 desta hora
         addRow(ct,halfLbl,mkBooked(bHf,room),seen);
         if(bHf.end-bHf.start===90){
           const fs=halfMin+90;
@@ -539,9 +548,14 @@ function renderSchedule(ct, roomId, day, seen){
             addRow(ct,m2s(fs),mkFree(m2s(fs),30,roomId,day),seen);
         }
       } else if(bPv.end===halfMin){
-        // bloco anterior termina no :30 → :30 livre
+        // Bloco anterior termina no :30 → hora cheia livre (30min) + :30 livre
+        addRow(ct,hLbl,mkFree(hLbl,30,roomId,day),seen);
         addRow(ct,halfLbl,mkFree(halfLbl,freeFrom(roomId,day,halfMin),roomId,day),seen);
+      } else if(bPv.end===hMin+60){
+        // Bloco anterior termina na próxima hora cheia → hora cheia não aparece (coberta)
+        // não faz nada, a próxima iteração tratará
       }
+      // se bPv.end > halfMin ainda cobre o :30 também → nada
 
     } else if(bH){
       // Bloco começa na hora cheia
@@ -846,9 +860,8 @@ function showToast(msg){
 }
 
 // ═══════════════════════════════════════════════
-// INIT
+// INIT — event listeners apenas
 // ═══════════════════════════════════════════════
-document.getElementById('date-label').textContent=fmtDate(0);
 document.getElementById('modal-book').addEventListener('click',e=>{if(e.target.id==='modal-book')closeBookModal();});
 document.getElementById('modal-cancel').addEventListener('click',e=>{if(e.target.id==='modal-cancel')closeCancelModal();});
 document.getElementById('prof-name').addEventListener('keydown',e=>{if(e.key==='Enter')confirmBooking();});
